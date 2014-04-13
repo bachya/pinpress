@@ -1,6 +1,0 @@
-= PinPress
-
-Describe your project here
-
-:include:PinPress.rdoc
-

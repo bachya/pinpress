@@ -1,23 +1,32 @@
-# Ensure we require the local version and not one we might have installed already
-require File.join([File.dirname(__FILE__),'lib','PinPress','version.rb'])
-spec = Gem::Specification.new do |s| 
-  s.name = 'PinPress'
-  s.version = PinPress::VERSION
-  s.author = 'Your Name Here'
-  s.email = 'your@email.address.com'
-  s.homepage = 'http://your.website.com'
-  s.platform = Gem::Platform::RUBY
-  s.summary = 'A description of your project'
-  s.files = `git ls-files`.split("
-")
-  s.require_paths << 'lib'
-  s.has_rdoc = true
-  s.extra_rdoc_files = ['README.rdoc','PinPress.rdoc']
-  s.rdoc_options << '--title' << 'PinPress' << '--main' << 'README.rdoc' << '-ri'
-  s.bindir = 'bin'
-  s.executables << 'PinPress'
-  s.add_development_dependency('rake')
-  s.add_development_dependency('rdoc')
-  s.add_development_dependency('aruba')
-  s.add_runtime_dependency('gli','2.9.0')
+# coding: utf-8
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'pinpress/constants'
+
+Gem::Specification.new do |spec| 
+  spec.name             = 'pinpress'
+  spec.version          = PinPress::VERSION
+  spec.authors          = ['Aaron Bach']
+  spec.email            = ['bachya1208@googlemail.com']
+  spec.summary          = PinPress::SUMMARY
+  spec.description      = PinPress::DESCRIPTION
+  spec.homepage         = 'https://github.com/bachya/PinPress'
+  spec.license          = 'MIT'
+  spec.platform         = Gem::Platform::RUBY
+
+  spec.require_paths    = ["lib"]
+  spec.files            = `git ls-files`.split("\n")
+  spec.executables      = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.test_files       = spec.files.grep(%r{^(test|spec|features)/})
+  
+  spec.license          = 'MIT'
+  spec.rdoc_options     = ['--charset=UTF-8']
+  spec.extra_rdoc_files = %w[README.md HISTORY.md LICENSE]
+  
+  spec.add_development_dependency('rake', '10.1.1')
+  spec.add_development_dependency('rdoc', '4.1.1')
+  spec.add_development_dependency('aruba', '0.5.4')
+  spec.add_runtime_dependency('cliutils', '~> 1.3')
+  spec.add_runtime_dependency('gli','2.9.0')
+  spec.add_runtime_dependency('pinboard', '0.1.1')
 end

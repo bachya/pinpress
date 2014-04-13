@@ -1,4 +1,7 @@
-require 'PinPress/version.rb'
+require 'PinPress/constants'
 
-# Add requires for other files you add to your project here, so
-# you just need to require this one file in your bin file
+# The PinPress module, which wraps everything
+# in this gem.
+module PinPress
+
+end
