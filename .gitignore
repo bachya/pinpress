@@ -1,0 +1,7 @@
+.DS_Store
+doc
+pkg
+.yardoc
+bin
+.tmp
+Gemfile.lock
