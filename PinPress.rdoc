@@ -1,0 +1,5 @@
+= PinPress
+
+Generate this with
+    PinPress rdoc
+After you have described your command line interface
