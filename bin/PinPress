@@ -1,47 +1,155 @@
 #!/usr/bin/env ruby
+# Encoding: utf-8
+#--------------------------------------------------------------------
+# PinPress
+#
+# A Pinboard application that allows for the creation of
+# "pin templates" in almost any conceivable format.
+#
+# Copyright (c) 2014
+# Aaron Bach <bachya1208@gmail.com>
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+#--------------------------------------------------------------------
+require 'cliutils'
 require 'gli'
-begin # XXX: Remove this begin/rescue before distributing your app
-require 'PinPress'
-rescue LoadError
-  STDERR.puts "In development, you need to use `bundle exec bin/PinPress` to run your app"
-  STDERR.puts "At install-time, RubyGems will make sure lib, etc. are in the load path"
-  STDERR.puts "Feel free to remove this message from bin/PinPress now"
-  exit 64
-end
+require 'pinpress'
 
+include CLIUtils::Configuration
+include CLIUtils::Messaging
 include GLI::App
 
-program_desc 'Describe your application here'
-
+#  ======================================================
+#  App Info
+#  ======================================================
+program_desc PinPress::DESCRIPTION
 version PinPress::VERSION
 
-desc 'Describe some switch here'
-switch [:s,:switch]
+#  ======================================================
+#  Global Flags and Switches
+#  ======================================================
 
-desc 'Describe some flag here'
-default_value 'the default'
-arg_name 'The name of the argument'
-flag [:f,:flagname]
+#  ======================================================
+#  Pre, Post, and Error
+#  ======================================================
+pre do |global, command, options, args|
+  # Load PinPress configuration module.
+  load_configuration(PinPress::CONFIG_FILEPATH)
+  file_logger = Logger.new(PinPress::LOG_FILEPATH)
+  file_logger.level = LOG_LEVELS[configuration.pinpress[:log_level] || 'DEBUG']
+  messenger.attach(LOGFILE: file_logger)
 
-pre do |global,command,options,args|
-  # Pre logic here
-  # Return true to proceed; false to abort and not call the
-  # chosen command
-  # Use skips_pre before a command to skip this block
-  # on that command only
+  if File.exists?(PinPress::CONFIG_FILEPATH)
+    # Set the current and last config versions in the Configurator.
+    configuration.current_version = configuration.pinpress[:version]
+    configuration.last_version = PinPress::NEWEST_CONFIG_VERSION
+
+    # Compare the two versions and, if needed, update.
+    configuration.compare_version do |c, l|
+      messenger.debug { "Upgrading from #{ c } to #{ l }" }
+      PinPress.update_config_file
+      exit!(0)
+    end
+  else
+    # Force the user to init if they try to run any command other than `init` first.
+    PinPress.init(true)
+    exit!(0)
+  end
   true
 end
 
 post do |global,command,options,args|
-  # Post logic here
-  # Use skips_post before a command to skip this
-  # block on that command only
+
 end
 
 on_error do |exception|
-  # Error logic here
-  # return false to skip default error handling
+  messenger.error(exception.to_s)
+  exit!(1)
   true
 end
 
+#  ======================================================
+#  Commands
+#  ======================================================
+#  ------------------------------------------------------
+#  get command
+#
+#  Gets posts from Pinboard.
+#  ------------------------------------------------------
+desc 'Get posts from Pinboard'
+command :get do |c|
+
+end
+
+#  ------------------------------------------------------
+#  init command
+#
+#  Initializes the app by asking the user for information
+#  needed torun.
+#  ------------------------------------------------------
+desc 'Install and initialize dependencies'
+command :init do |c|
+  c.switch([:s], desc: 'Run init from scratch (i.e., clear out all values from configuration)')
+  c.action do |global_options, options, args|
+    if options[:s]
+      PinPress::init(true)
+    else
+      long_message = "You've already initialized PinPress. Do it again?"
+      PinPress::init if messenger.prompt(long_message, 'N').downcase == 'y'
+    end
+  end
+end
+
+#  ------------------------------------------------------
+#  template command
+#
+#  Manages templates 
+#  ------------------------------------------------------
+desc 'Get posts from Pinboard'
+command :template do |c|
+  c.desc 'Choose the default template'
+  c.command :defualt do |default|
+    
+  end
+
+  c.desc 'List current templates'
+  c.command :list do |list|
+    list.action do |global_options, options, args|
+      templates = configuration.pinpress[:templates]
+      if !templates.nil?
+        messenger.section('AVAILABLE TEMPLATES')
+        templates.each_with_index do |template, index|
+          puts index + 1
+        end
+      else
+        messenger.warn('No templates defined...')
+      end
+    end
+  end
+  c.default_command :list
+end
+
+
+#  ======================================================
+#  Run!
+#  ======================================================
 exit run(ARGV)

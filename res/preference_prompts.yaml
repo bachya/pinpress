@@ -1,0 +1,12 @@
+prompts:
+  - prompt_text: Input you Pinboard API token
+    config_key: api_token
+    config_section: pinboard
+    pre:
+      message: "First, we'll need to open Pinboard in your default browser to collect your Pinboard API token."
+      action:
+        name: open_url
+        parameters:
+          url: https://pinboard.in/settings/password
+    validators:
+      - non_nil
