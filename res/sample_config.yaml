@@ -1,0 +1,17 @@
+---
+pinpress:
+  config_location: "/Users/abach/.pinpress"
+  default_template: pinpress_default
+  log_level: WARN
+  version: 1.0.0
+  api_token: bachya:b819312cf9ccee799b87
+templates:
+- name: pinpress_default
+  opener: "<ul>"
+  item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
+    description %></a>.</b> <%= extended %></li>"
+  closer: "</ul>"
+- name: secondary
+  opener: "<ul>"
+  item: "<li>TEST</li>"
+  closer: "</ul>"
