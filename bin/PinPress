@@ -107,27 +107,51 @@ command :get do |c|
   c.flag([:template], desc: 'The template to use')
 
   c.action do |global_options, options, args|
-    unless configuration.pinpress[:default_template]
-      messenger.info("You don't appear to have picked a default template. Let's do that!")
-      PinPress.choose_template
+    # Determine the template to use.
+    # template = PinPress.assign_template(args[0])
+
+    if args.empty?
+      template = PinPress.get_template
+    else
+      template = PinPress.get_template(args[0])
     end
-    
-    # Create a Pinboard client and set options based on
-    # PinPress flags.
-    opts = {}
-    client = Pinboard::Client.new(token: configuration.pinboard[:api_token])
-    opts.merge!(todt: Chronic.parse(options[:e])) if options[:e]
-    opts.merge!(results: options[:n]) if options[:n]
-    opts.merge!(fromdt: Chronic.parse(options[:s])) if options[:s]
-    opts.merge!(tag: options[:t]) if options[:t]
-    begin
-      pins = client.posts(opts)
-      pins.each do |p|
-        p p
+
+    if !template.nil?
+      # Create a Pinboard client and set options based on
+      # PinPress flags.
+      opts = {}
+      client = Pinboard::Client.new(token: configuration.pinpress[:api_token])
+      opts.merge!(todt: Chronic.parse(options[:e])) if options[:e]
+      opts.merge!(results: options[:n]) if options[:n]
+      opts.merge!(fromdt: Chronic.parse(options[:s])) if options[:s]
+      opts.merge!(tag: options[:t]) if options[:t]
+      begin
+        pins = client.posts(opts)
+
+        puts template[:opener]
+        pins.each do |p|
+          href        = p[:href]
+          description = p[:description]
+          extended    = p[:extended]
+          tag         = p[:tag]
+          time        = p[:time]
+          replace     = p[:replace]
+          shared      = p[:shared]
+          toread      = p[:toread]
+
+          line = ERB.new <<-LINETEMPLATE
+  #{ template[:item] }
+          LINETEMPLATE
+          puts line.result(binding)
+        end
+        puts template[:closer]
+      rescue StandardError => e
+        puts e.to_s
+        fail "Pinboard API failed; are you sure you've run " \
+             " `pinpress init` (and that your API key is correct)?"
       end
-    rescue StandardError => e
-      fail "Pinboard API failed; are you sure you've run " \
-           " `pinpress init` (and that your API key is correct)?"
+    else
+      fail 'Invalid template provided and/or no valid default template exists!'
     end
   end
 end
@@ -158,6 +182,13 @@ end
 #  ------------------------------------------------------
 desc 'Work with templates for pin output'
 command :template do |c|
+  c.desc 'Choose the default template'
+  c.command :default do |default|
+    default.action do |global_options, options, args|
+      PinPress.choose_default_template
+    end
+  end
+
   c.desc 'List current templates'
   c.command :list do |list|
     list.action do |global_options, options, args|

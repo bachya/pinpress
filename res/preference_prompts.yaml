@@ -1,7 +1,7 @@
 prompts:
   - prompt_text: Input you Pinboard API token
     config_key: api_token
-    config_section: pinboard
+    config_section: pinpress
     pre:
       message: "First, we'll need to open Pinboard in your default browser to collect your Pinboard API token."
       action:

@@ -16,7 +16,7 @@ module PinPress
   # Presents the user with a list of templates and
   # allows them to choose one.
   # @return [void]
-  def self.choose_template
+  def self.choose_default_template
     templates = configuration.templates
     if !templates.nil?
       messenger.section('CHOOSE A DEFAULT TEMPLATE')
@@ -33,12 +33,12 @@ module PinPress
       until valid_choice_made
         choice = messenger.prompt("Choose from the list above")
         array_index = choice.to_i - 1
-
+        
         if array_index >= 0 && !templates[array_index].nil?
           default_template_name = templates[array_index][:name]
           configuration.pinpress[:default_template] = default_template_name
           configuration.save
-
+        
           messenger.success("New default template chosen: #{ default_template_name }")
           valid_choice_made = true
         else
@@ -47,6 +47,17 @@ module PinPress
       end
     else
       messenger.warn('No templates defined...')
+    end
+  end
+
+  # Determines whether a template exists.
+  # @param [<String, Symbol>] template_name
+  # @return [Boolean]
+  def self.get_template(template_name = nil)
+    if template_name.nil?
+      configuration.templates.find { |t| t[:name] == configuration.pinpress[:default_template] }
+    else
+      configuration.templates.find { |t| t[:name] == template_name }
     end
   end
 
@@ -59,13 +70,24 @@ module PinPress
       if from_scratch
         configuration.reset
         configuration.add_section(:pinpress)
-      end
+        configuration.add_section(:templates)
 
-      configuration.pinpress.merge!({
-        config_location: configuration.config_path,
-        log_level: 'WARN',
-        version: PinPress::VERSION,
-      })
+        default_template = {
+          name: 'pinpress_default',
+          opener: '<ul>',
+          item: '<li><b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b> <%= extended %></li>',
+          closer: '</ul>'
+        }
+
+        configuration.data['templates'] = [default_template]
+        
+        configuration.pinpress.merge!({
+          config_location: configuration.config_path,
+          default_template: 'pinpress_default',
+          log_level: 'WARN',
+          version: PinPress::VERSION,
+        })
+      end
 
       pm = CLIUtils::Prefs.new(PinPress::PREF_FILES['INIT'], configuration)
       pm.ask
@@ -77,6 +99,8 @@ module PinPress
     }
   end
 
+  # Present a list of installed templates to the user
+  # @return [void]
   def self.list_templates
     templates = configuration.templates
     if !templates.nil?
