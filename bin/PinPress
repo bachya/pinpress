@@ -119,11 +119,9 @@ end
 desc 'Get posts from Pinboard'
 command :pins do |c|
   c.flag([:e], desc: 'The end date to pull pins to')
-  c.flag([:f], desc: 'Output the results to a file')
   c.flag([:n], desc: 'The number of results to return')
   c.flag([:s], desc: 'The start date to pull pins from')
   c.flag([:t], desc: 'The tags to use (e.g., "ruby,pinboard")')
-  c.flag([:template], desc: 'The template to use')
 
   c.action do |global_options, options, args|
     # Determine the template to use.
@@ -180,21 +178,26 @@ end
 # Gets pins from Pinboard.
 # ------------------------------------------------------
 desc 'Work with templates for pin output'
-command :templates do |c|
-  c.desc 'Choose the default template'
-  c.command :default do |default|
-    default.action do |global_options, options, args|
-      PinPress.choose_default_template
-    end
-  end
+command :tags do |c|
+  c.flag([:e], desc: 'The end date to pull pins to')
+  c.flag([:n], desc: 'The number of results to return')
+  c.flag([:s], desc: 'The start date to pull pins from')
+  c.flag([:t], desc: 'The tags to use (e.g., "ruby,pinboard")')
 
-  c.desc 'List current templates'
-  c.command :list do |list|
-    list.action do |global_options, options, args|
-      PinPress.list_templates
+  c.desc 'Gets the unique tags based on the passed criteria'
+  c.command :all do |default|
+    default.action do |global_options, options, args|
+      client = Pinboard::Client.new(token: configuration.pinpress[:api_token])
+      begin
+        tags = client.tags_get
+        p tags
+      rescue StandardError => e
+        fail "Pinboard API failed; are you sure you've run " \
+             " `pinpress init` (and that your API key is correct)?"
+      end
     end
   end
-  c.default_command :list
+  c.default_command :all
 end
 
 # ------------------------------------------------------

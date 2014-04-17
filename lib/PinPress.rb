@@ -3,14 +3,6 @@ require 'pinpress/constants'
 # The PinPress module, which wraps everything
 # in this gem.
 module PinPress
-  # Constant to refer to a "pins" template.
-  # @return [Fixnum]
-  TEMPLATE_TYPE_PINS = 1
-
-  # Constant to refer to a "tags" template.
-  # @return [Fixnum]
-  TEMPLATE_TYPE_TAGS = 2
-
   class << self
     # Stores whether initalization has completed.
     # @return [Boolean]
@@ -82,7 +74,6 @@ module PinPress
 
         default_template = {
           name: 'pinpress_default',
-          type: 'pins',
           opener: '<ul>',
           item: '<li><b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b> <%= extended %></li>',
           closer: '</ul>'
