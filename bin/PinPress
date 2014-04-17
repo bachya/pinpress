@@ -40,19 +40,19 @@ include CLIUtils::Configuration
 include CLIUtils::Messaging
 include GLI::App
 
-#  ======================================================
-#  App Info
-#  ======================================================
+# ======================================================
+# App Info
+# ======================================================
 program_desc PinPress::DESCRIPTION
 version PinPress::VERSION
 
-#  ======================================================
-#  Global Flags and Switches
-#  ======================================================
+# ======================================================
+# Global Flags and Switches
+# ======================================================
 
-#  ======================================================
-#  Pre, Post, and Error
-#  ======================================================
+# ======================================================
+# Pre, Post, and Error
+# ======================================================
 pre do |global, command, options, args|
   # Load PinPress configuration module.
   load_configuration(PinPress::CONFIG_FILEPATH)
@@ -89,15 +89,15 @@ on_error do |exception|
   true
 end
 
-#  ======================================================
-#  Commands
-#  ======================================================
-#  ------------------------------------------------------
-#  init command
+# ======================================================
+# Commands
+# ======================================================
+# ------------------------------------------------------
+# init command
 #
-#  Initializes the app by asking the user for information
-#  needed torun.
-#  ------------------------------------------------------
+# Initializes the app by asking the user for information
+# needed to run.
+# ------------------------------------------------------
 desc 'Install and initialize dependencies'
 command :init do |c|
   c.switch([:s], desc: 'Run init from scratch (i.e., clear out all values from configuration)')
@@ -111,11 +111,11 @@ command :init do |c|
   end
 end
 
-#  ------------------------------------------------------
-#  pins command
+# ------------------------------------------------------
+# pins command
 #
-#  Gets pins from Pinboard.
-#  ------------------------------------------------------
+# Gets pins from Pinboard.
+# ------------------------------------------------------
 desc 'Get posts from Pinboard'
 command :pins do |c|
   c.flag([:e], desc: 'The end date to pull pins to')
@@ -174,13 +174,13 @@ command :pins do |c|
   end
 end
 
-#  ------------------------------------------------------
-#  template command
+# ------------------------------------------------------
+# tags command
 #
-#  Manages templates 
-#  ------------------------------------------------------
+# Gets pins from Pinboard.
+# ------------------------------------------------------
 desc 'Work with templates for pin output'
-command :template do |c|
+command :templates do |c|
   c.desc 'Choose the default template'
   c.command :default do |default|
     default.action do |global_options, options, args|
@@ -197,7 +197,30 @@ command :template do |c|
   c.default_command :list
 end
 
-#  ======================================================
-#  Run!
-#  ======================================================
+# ------------------------------------------------------
+# templates command
+#
+# Manages pin templates.
+# ------------------------------------------------------
+desc 'Work with templates for pin output'
+command :templates do |c|
+  c.desc 'Choose the default template'
+  c.command :default do |default|
+    default.action do |global_options, options, args|
+      PinPress.choose_default_template
+    end
+  end
+
+  c.desc 'List current templates'
+  c.command :list do |list|
+    list.action do |global_options, options, args|
+      PinPress.list_templates
+    end
+  end
+  c.default_command :list
+end
+
+# ======================================================
+# Run!
+# ======================================================
 exit run(ARGV)
