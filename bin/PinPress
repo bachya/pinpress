@@ -93,12 +93,31 @@ end
 #  Commands
 #  ======================================================
 #  ------------------------------------------------------
-#  get command
+#  init command
 #
-#  Gets posts from Pinboard.
+#  Initializes the app by asking the user for information
+#  needed torun.
+#  ------------------------------------------------------
+desc 'Install and initialize dependencies'
+command :init do |c|
+  c.switch([:s], desc: 'Run init from scratch (i.e., clear out all values from configuration)')
+  c.action do |global_options, options, args|
+    if options[:s]
+      PinPress.init(true)
+    else
+      long_message = "You've already initialized PinPress. Do it again?"
+      PinPress.init if messenger.prompt(long_message, 'N').downcase == 'y'
+    end
+  end
+end
+
+#  ------------------------------------------------------
+#  pins command
+#
+#  Gets pins from Pinboard.
 #  ------------------------------------------------------
 desc 'Get posts from Pinboard'
-command :get do |c|
+command :pins do |c|
   c.flag([:e], desc: 'The end date to pull pins to')
   c.flag([:f], desc: 'Output the results to a file')
   c.flag([:n], desc: 'The number of results to return')
@@ -146,31 +165,11 @@ command :get do |c|
         end
         puts template[:closer]
       rescue StandardError => e
-        puts e.to_s
         fail "Pinboard API failed; are you sure you've run " \
              " `pinpress init` (and that your API key is correct)?"
       end
     else
       fail 'Invalid template provided and/or no valid default template exists!'
-    end
-  end
-end
-
-#  ------------------------------------------------------
-#  init command
-#
-#  Initializes the app by asking the user for information
-#  needed torun.
-#  ------------------------------------------------------
-desc 'Install and initialize dependencies'
-command :init do |c|
-  c.switch([:s], desc: 'Run init from scratch (i.e., clear out all values from configuration)')
-  c.action do |global_options, options, args|
-    if options[:s]
-      PinPress.init(true)
-    else
-      long_message = "You've already initialized PinPress. Do it again?"
-      PinPress.init if messenger.prompt(long_message, 'N').downcase == 'y'
     end
   end
 end
