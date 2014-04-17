@@ -13,6 +13,43 @@ module PinPress
     attr_accessor :verbose
   end
 
+  # Presents the user with a list of templates and
+  # allows them to choose one.
+  # @return [void]
+  def self.choose_template
+    templates = configuration.templates
+    if !templates.nil?
+      messenger.section('CHOOSE A DEFAULT TEMPLATE')
+      messenger.success("Current Default Template: #{ configuration.pinpress[:default_template] }")
+      messenger.info("Choose a New Template:")
+      templates.each_with_index do |template, index|
+        messenger.info("#{ index + 1}. #{ template[:name] }")
+      end
+
+      # Loop through the possible template choices and collect the user's
+      # input. If a valid choice is made, set the default; otherwise,
+      # force the user to pick.
+      valid_choice_made = false
+      until valid_choice_made
+        choice = messenger.prompt("Choose from the list above")
+        array_index = choice.to_i - 1
+
+        if array_index >= 0 && !templates[array_index].nil?
+          default_template_name = templates[array_index][:name]
+          configuration.pinpress[:default_template] = default_template_name
+          configuration.save
+
+          messenger.success("New default template chosen: #{ default_template_name }")
+          valid_choice_made = true
+        else
+          messenger.error("Invalid choice: #{ choice }")
+        end
+      end
+    else
+      messenger.warn('No templates defined...')
+    end
+  end
+
   # Initializes PinPress by downloading and
   # collecting all necessary items and info.
   # @param [Boolean] from_scratch
@@ -38,6 +75,18 @@ module PinPress
       configuration.save
       @initialized = true
     }
+  end
+
+  def self.list_templates
+    templates = configuration.templates
+    if !templates.nil?
+      messenger.section('AVAILABLE TEMPLATES')
+      templates.each_with_index do |template, index|
+        messenger.info("#{ index + 1 }. #{ template[:name] }")
+      end
+    else
+      messenger.warn('No templates defined...')
+    end
   end
 
   # Notifies the user that the config file needs to be

@@ -30,8 +30,10 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 #--------------------------------------------------------------------
+require 'chronic'
 require 'cliutils'
 require 'gli'
+require 'pinboard'
 require 'pinpress'
 
 include CLIUtils::Configuration
@@ -97,7 +99,37 @@ end
 #  ------------------------------------------------------
 desc 'Get posts from Pinboard'
 command :get do |c|
+  c.flag([:e], desc: 'The end date to pull pins to')
+  c.flag([:f], desc: 'Output the results to a file')
+  c.flag([:n], desc: 'The number of results to return')
+  c.flag([:s], desc: 'The start date to pull pins from')
+  c.flag([:t], desc: 'The tags to use (e.g., "ruby,pinboard")')
+  c.flag([:template], desc: 'The template to use')
 
+  c.action do |global_options, options, args|
+    unless configuration.pinpress[:default_template]
+      messenger.info("You don't appear to have picked a default template. Let's do that!")
+      PinPress.choose_template
+    end
+    
+    # Create a Pinboard client and set options based on
+    # PinPress flags.
+    opts = {}
+    client = Pinboard::Client.new(token: configuration.pinboard[:api_token])
+    opts.merge!(todt: Chronic.parse(options[:e])) if options[:e]
+    opts.merge!(results: options[:n]) if options[:n]
+    opts.merge!(fromdt: Chronic.parse(options[:s])) if options[:s]
+    opts.merge!(tag: options[:t]) if options[:t]
+    begin
+      pins = client.posts(opts)
+      pins.each do |p|
+        p p
+      end
+    rescue StandardError => e
+      fail "Pinboard API failed; are you sure you've run " \
+           " `pinpress init` (and that your API key is correct)?"
+    end
+  end
 end
 
 #  ------------------------------------------------------
@@ -111,10 +143,10 @@ command :init do |c|
   c.switch([:s], desc: 'Run init from scratch (i.e., clear out all values from configuration)')
   c.action do |global_options, options, args|
     if options[:s]
-      PinPress::init(true)
+      PinPress.init(true)
     else
       long_message = "You've already initialized PinPress. Do it again?"
-      PinPress::init if messenger.prompt(long_message, 'N').downcase == 'y'
+      PinPress.init if messenger.prompt(long_message, 'N').downcase == 'y'
     end
   end
 end
@@ -124,30 +156,16 @@ end
 #
 #  Manages templates 
 #  ------------------------------------------------------
-desc 'Get posts from Pinboard'
+desc 'Work with templates for pin output'
 command :template do |c|
-  c.desc 'Choose the default template'
-  c.command :defualt do |default|
-    
-  end
-
   c.desc 'List current templates'
   c.command :list do |list|
     list.action do |global_options, options, args|
-      templates = configuration.pinpress[:templates]
-      if !templates.nil?
-        messenger.section('AVAILABLE TEMPLATES')
-        templates.each_with_index do |template, index|
-          puts index + 1
-        end
-      else
-        messenger.warn('No templates defined...')
-      end
+      PinPress.list_templates
     end
   end
   c.default_command :list
 end
-
 
 #  ======================================================
 #  Run!
