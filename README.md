@@ -67,19 +67,21 @@ COMMAND OPTIONS
 
 # Known Issues & Future Releases
 
-Bugs, issues, and enhancement requests (my own or those submitted by others) can be found on the [Issues Page](https://github.com/bachya/Sifttter-Redux/issues "Open Items").
+Check out the Pinpress roadmap via the [Trello Board](https://trello.com/b/lmuC8TT0/pinpress "Pinpress Trello Board").
+
+Bugs, issues, and enhancement requests can be submitted on the [Issues Page](https://github.com/bachya/Pinpress/issues "Open Items").
 
 # Bugs and Feature Requests
 
-To report bugs with or suggest features/changes for Sifttter Redux, please use the [Issues Page](http://github.com/bachya/sifttter-redux/issues).
+To report bugs with or suggest features/changes for Sifttter Redux, please use the [Issues Page](http://github.com/bachya/PinPress/issues).
 
 Contributions are welcome and encouraged. To contribute:
 
-* [Fork Sifttter Redux](http://github.com/bachya/sifttter-redux/fork).
+* [Fork Sifttter Redux](http://github.com/bachya/PinPress/fork).
 * Create a branch for your contribution (`git checkout -b new-feature`).
 * Commit your changes (`git commit -am 'Added this new feature'`).
 * Push to the branch (`git push origin new-feature`).
-* Create a new [Pull Request](http://github.com/bachya/sifttter-redux/compare/).
+* Create a new [Pull Request](http://github.com/bachya/PinPress/compare/).
 
 # License
 
