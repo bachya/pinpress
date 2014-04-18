@@ -1,7 +1,7 @@
 PinPress
 ========
 [![Build Status](https://travis-ci.org/bachya/PinPress.svg?branch=master)](https://travis-ci.org/bachya/PinPress)
-[![Gem Version](https://badge.fury.io/rb/pinpress.svg)](http://badge.fury.io/rb/sifttter-redux)
+[![Gem Version](https://badge.fury.io/rb/pinpress.svg)](http://badge.fury.io/rb/pinpress)
 
 PinPress is a simple CLI to create templates (HTML, Markdown, or otherwise) of Pinboard pins and tags.
 
@@ -18,7 +18,7 @@ In addition to Git (which, given you being on this site, I'll assume you have), 
 # Installation
 
 ```
-gem install sifttter-redux
+gem install pinpress
 ```
 
 # Usage
