@@ -65,7 +65,7 @@ COMMAND OPTIONS
     -t arg - The tags to use (e.g., "ruby,pinboard") (default: none)
 ```
 
-## Initialization
+# Initialization
 
 ```
 $ pinpress init
@@ -73,11 +73,15 @@ $ pinpress init
 
 Initialization will prompt you to enter your Pinboard API token. Once, entered, this (and other pertinent data) will be stored in `~/.pinpress`.
 
-## Templates
+# Templates
 
 The first stop on the PinPress journey is templates. Templates are used to define how data should be output and are defined in `~/.pinpress` and come in two forms: **Pin Templates** and **Tag Templates**. 
 
-### Pin Templates
+## Pin Templates
+
+Pin Templates define how a pin should be output.
+
+### Schema
 
 Pin Templates are placed under the `pin_templates` section of the `~/.pinpress` config file -- as an example:
 
@@ -85,11 +89,32 @@ Pin Templates are placed under the `pin_templates` section of the `~/.pinpress` 
 pin_templates:
 - name: pinpress_default
   opener: "<ul>"
+  closer: "</ul>"
   item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
     description %></a>.</b> <%= extended %></li>"
   item_separator: "\n"
-  closer: "</ul>"
 ```
+
+A Pin Template can have several different sub-keys:
+
+* `name` (**required**): the name of the template
+* `opener` (*optional*): the text that should exist above the pins
+* `closer` (*optional*): the text that should exist above the pins
+* `item` (**required**): the formatted text that should be output for every pin
+* `item_separator` (**required**): the text that should exist between each pin ("item")
+
+### Available Tokens
+
+Additionally, a Pin Template can make use of several different tokens that are filled by a pin's values:
+
+* `<%= href %>`: the URL of the pin
+* `<%= description %>`: the description of the pin
+* `<%= extended %>`: the pin's longer assocated description
+* `<%= tag %>`: the CSV list of tags that apply to the pin
+* `<%= time %>`: the time the pin was added to Pinboard
+* `<%= replace %>`: the replacement status of the pin
+* `<%= shared %>`: the privacy status of the pin
+* `<%= toread %>`: the "to-read" status of the pin
 
 # Known Issues & Future Releases
 
