@@ -50,7 +50,7 @@ COMMANDS
 
 Note that each command's options can be revealed by adding the `--help` switch after the command. For example:
 
-```Bash
+```
 $ pinpress pins --help
 NAME
     pins - Get posts from Pinboard
@@ -75,13 +75,21 @@ Initialization will prompt you to enter your Pinboard API token. Once, entered, 
 
 ## Templates
 
-The first stop on the PinPress journey is templates. Templates are defined in `~/.pinpress` and come in two forms: **Pin Templates** and **Tag Templates**.
+The first stop on the PinPress journey is templates. Templates are used to define how data should be output and are defined in `~/.pinpress` and come in two forms: **Pin Templates** and **Tag Templates**. 
 
 ### Pin Templates
 
-Pin Templates are placed under the `pin_templates` section of the `~/.pinpress` config file:
+Pin Templates are placed under the `pin_templates` section of the `~/.pinpress` config file -- as an example:
 
-
+```YAML
+pin_templates:
+- name: pinpress_default
+  opener: "<ul>"
+  item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
+    description %></a>.</b> <%= extended %></li>"
+  item_separator: "\n"
+  closer: "</ul>"
+```
 
 # Known Issues & Future Releases
 
