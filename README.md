@@ -77,6 +77,7 @@ Initialization will prompt you to enter your Pinboard API token. Once, entered, 
 
 ```
 $ pinpress pins
+# => <ul><li><b><a title="Using Drafts for Remote CLI" href="https://gist.github.com/hiilppp/10993803" target="_blank">Using Drafts for Remote CLI</a>.</b> As a text file is added to a directory to which this AppleScript is associated as Folder Action, the content of the received file is executed as shell script and the generated output sent to an iOS device.</li></ul>
 ```
 
 This simple command will return all pins from the user's account and output them based on the [Pin Template](https://github.com/bachya/PinPress#pin-templates "Pin Templates") provided.
@@ -124,6 +125,7 @@ Pinpress can also work with tags in a Pinboard account:
 
 ```
 $ pinpress tags
+# => cli (1),github (1),applescript (1),osx (1),link-mash (1)
 ```
 
 This simple command will return all tags from the user's account and output them based on the [Tag Template](https://github.com/bachya/PinPress#tag-templates "Tag Templates") provided.
@@ -228,6 +230,67 @@ Using this example, here's what's output:
 ```
 $ pinpress pins -s 'yesterday'
 # => <ul><li><b><a title="Using Drafts for Remote CLI" href="https://gist.github.com/hiilppp/10993803" target="_blank">Using Drafts for Remote CLI</a>.</b> As a text file is added to a directory to which this AppleScript is associated as Folder Action, the content of the received file is executed as shell script and the generated output sent to an iOS device.</li></ul>
+```
+
+## Tag Templates
+
+Tag Templates are exactly like Pin Templates, but are used for tags.
+
+### Schema
+
+They, too, are defined in `~/.pinpress`:
+
+```YAML
+tag_templates:
+- name: pinpress_default
+  item: "<%= tag %> (<%= count %>)"
+  item_separator: ","
+```
+
+A Pin Template can have several different sub-keys:
+
+* `name` (**required**): the name of the template
+* `opener` (*optional*): the text that should exist above the pins
+* `closer` (*optional*): the text that should exist above the pins
+* `item` (**required**): the formatted text that should be output for every pin
+* `item_separator` (**required**): the text that should exist between each pin ("item")
+
+### Available Tokens
+
+Additionally, a Pin Template can make use of several different tokens that are filled by a pin's values:
+
+* `<%= tag %>`: the name of the tag
+* `<%= count %>`: the number of times the tag has been used in the range
+
+### Usage
+
+Pin Templates can be used in two ways: they can either be called dynamically:
+
+```
+$ pinpress tags template_name
+```
+
+...or a default template can be specified in `~/.pinpress`:
+
+```
+---
+pinpress:
+  config_location: "/Users/abach/.pinpress"
+  default_tag_template: pinpress_default
+  # ... other keys ...
+pin_templates:
+  # ... other keys ...
+tag_templates:
+- name: pinpress_default
+  item: "<%= tag %> (<%= count %>)"
+  item_separator: ","
+```
+
+Using this example, here's what's output:
+
+```
+$ pinpress tags -s 'yesterday'
+# => cli (1),github (1),applescript (1),osx (1),link-mash (1)
 ```
 
 # Known Issues & Future Releases
