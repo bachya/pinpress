@@ -3,7 +3,7 @@ pinpress:
   config_location: "/Users/abach/.pinpress"
   default_template: pinpress_default
   log_level: WARN
-  version: 1.0.0
+  version: 1.0.1
   api_token: bachya:b819312cf9ccee799b87
 templates:
 - name: pinpress_default

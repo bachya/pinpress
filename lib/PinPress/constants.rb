@@ -9,7 +9,7 @@ module PinPress
   DESCRIPTION = 'A Pinboard application that allows for the creation of "pin templates" in almost any conceivable format.'
 
   # The last version to require a config update
-  NEWEST_CONFIG_VERSION = '1.0.0'
+  NEWEST_CONFIG_VERSION = '1.0.1'
 
   # Hash of preference files
   PREF_FILES = {
@@ -20,5 +20,5 @@ module PinPress
   SUMMARY = 'A simple CLI to create HTML templates of Pinboard data.'
 
   # The Gem's version
-  VERSION = '1.0.0'
+  VERSION = '1.0.1'
 end

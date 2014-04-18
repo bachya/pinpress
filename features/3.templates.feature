@@ -10,7 +10,7 @@ Feature: Templates
       config_location: "/tmp/pp/.pinpress"
       default_template: pinpress_default
       log_level: WARN
-      version: 1.0.0
+      version: 1.0.1
       api_token: '12345'
     templates:
     - name: pinpress_default
@@ -38,7 +38,7 @@ Feature: Templates
       config_location: "/tmp/pp/.pinpress"
       default_template: pinpress_default
       log_level: WARN
-      version: 1.0.0
+      version: 1.0.1
       api_token: '12345'
     templates:
     - name: pinpress_default
@@ -66,7 +66,7 @@ Feature: Templates
       config_location: "/tmp/pp/.pinpress"
       default_template: pinpress_default
       log_level: WARN
-      version: 1.0.0
+      version: 1.0.1
       api_token: '12345'
     templates:
     - name: pinpress_default
@@ -102,7 +102,7 @@ Feature: Templates
         config_location: "/tmp/pp/.pinpress"
         default_template: secondary
         log_level: WARN
-        version: 1.0.0
+        version: 1.0.1
         api_token: '12345'
       templates:
       - name: pinpress_default
