@@ -7,9 +7,9 @@ PinPress is a simple CLI to create templates (HTML, Markdown, or otherwise) of P
 
 # Why?
 
-Every two weeks, I create a "link mash" for my website; this link mash consists of URLs that I find interesting and want to share with my readers. Previously, I would save those interesting URLs to an Evernote note and, every two weeks, manually create my link mash. <barf/>
+Every two weeks, I create a "link mash" for my website; this link mash consists of URLs that I find interesting and want to share with my readers. Previously, I would save those interesting URLs to an Evernote note and, every two weeks, manually create my link mash for use in Wordpress. <barf/>
 
-When I began using [Pinboard](http://pinboard.in "Pinboard") to save interesting links, I knew I needed a better method. This tool is the result.
+When I began using [Pinboard](http://pinboard.in "Pinboard") to save interesting links, I knew I needed a better method. This tool is the result: **Pin**board + Word**press**.
 
 # Prerequisites
 
@@ -79,7 +79,7 @@ Initialization will prompt you to enter your Pinboard API token. Once, entered, 
 $ pinpress pins
 ```
 
-This simple command will return all pins from the user's account and output them based on the [Pin Template](https://github.com/bachya/PinPress#templates "Pin Templates") provided.
+This simple command will return all pins from the user's account and output them based on the [Pin Template](https://github.com/bachya/PinPress#pin-templates "Pin Templates") provided.
 
 Pinpress also provides some flags that allow a user to define specific pins to grab:
 
@@ -104,6 +104,12 @@ $ pinpress pins -e 2014-01-01
 
 ...returns all pins up to January 1, 2014.
 
+## Getting Pins Between a Date Range
+
+```
+$ pinpress pins -s 2014-01-01 -e 2014-01-31
+```
+
 ## Getting Tagged Pins
 
 ```
@@ -111,6 +117,43 @@ $ pinpress pins -t "ruby,cli"
 ```
 
 ...returns all pins tagged "ruby" *and* "cli".
+
+# Getting Tags
+
+Pinpress can also work with tags in a Pinboard account:
+
+```
+$ pinpress tags
+```
+
+This simple command will return all tags from the user's account and output them based on the [Tag Template](https://github.com/bachya/PinPress#tag-templates "Tag Templates") provided.
+
+Pinpress also provides some flags that allow a user to define specific tags to grab:
+
+* `-s`: the start date to use (uses [Chronic](https://github.com/mojombo/chronic "Chronic"), which allows dates like "last Tuesday")
+* `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
+
+## Getting Tags From a Date Forward
+
+```
+$ pinpress tags -s 2014-01-01
+```
+
+...returns all tags used from January 1, 2014 to the current day. Note that for each tag returned, the data includes both the tag name and the number of times it was used.
+
+## Getting Tags Until a Date
+
+```
+$ pinpress tags -e 2014-01-01
+```
+
+...returns all tags used up to January 1, 2014.
+
+## Getting Tags Between a Date Range
+
+```
+$ pinpress tags -s 2014-01-01 -e 2014-01-31
+```
 
 # Templates
 
