@@ -23,7 +23,7 @@ gem install pinpress
 
 # Usage
 
-Syntax and usage can be accessed by running `srd help`:
+Syntax and usage can be accessed by running `pinpress help`:
 
 ```
 $ pinpress help
