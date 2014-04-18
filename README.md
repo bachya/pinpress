@@ -214,12 +214,20 @@ pinpress:
   config_location: "/Users/abach/.pinpress"
   default_pin_template: pinpress_default
   # ... other keys ...
+pin_templates:
+- name: pinpress_default
+  opener: "<ul>"
+  closer: "</ul>"
+  item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
+    description %></a>.</b> <%= extended %></li>"
+  item_separator: "\n"
 ```
 
-...which will use the `pinpress_default` template when running:
+Using this example, here's what's output:
 
 ```
-$ pinpress pins
+$ pinpress pins -s 'yesterday'
+# => <ul><li><b><a title="Using Drafts for Remote CLI" href="https://gist.github.com/hiilppp/10993803" target="_blank">Using Drafts for Remote CLI</a>.</b> As a text file is added to a directory to which this AppleScript is associated as Folder Action, the content of the received file is executed as shell script and the generated output sent to an iOS device.</li></ul>
 ```
 
 # Known Issues & Future Releases
