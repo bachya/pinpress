@@ -1,4 +1,7 @@
 require 'pinpress/constants'
+require 'pinpress/templates/template'
+require 'pinpress/templates/pin_template'
+require 'pinpress/templates/tag_template'
 
 # The PinPress module, which wraps everything
 # in this gem.
@@ -50,15 +53,42 @@ module PinPress
     end
   end
 
-  # Determines whether a template exists.
-  # @param [<String, Symbol>] template_name
-  # @return [Boolean]
-  def self.get_template(template_name = nil)
-    if template_name.nil?
-      configuration.templates.find { |t| t[:name] == configuration.pinpress[:default_template] }
+  def self.execute_template(template_type, template_name)
+    template_hash = PinPress.get_template_by_name(template_type, template_name)
+    if !template_hash.nil?
+      template = PinPress::TagTemplate.new(template_hash)
+      client = Pinboard::Client.new(token: configuration.pinpress[:api_token])
+      yield template, client
     else
-      configuration.templates.find { |t| t[:name] == template_name }
+      fail 'Invalid template provided and/or no default template'
     end
+  end
+
+  # Determines whether a template exists.
+  # @param [Fixnum] template_type
+  # @param [<String, Symbol>] template_name
+  # @return [Template]
+  def self.get_template_by_name(template_type, template_name = nil)
+    case template_type
+    when Template::TEMPLATE_TYPE_PIN
+      default_t_name = configuration.pinpress[:default_pin_template]
+      if template_name.nil?
+        t = configuration.pin_templates.find { |t| t[:name] == default_t_name }
+      else
+        t = configuration.pin_templates.find { |t| t[:name] == template_name }
+      end
+    when Template::TEMPLATE_TYPE_TAG
+      default_t_name = configuration.pinpress[:default_tag_template]
+      if template_name.nil?
+        t = configuration.tag_templates.find { |t| t[:name] == default_t_name }
+      else
+        t = configuration.tag_templates.find { |t| t[:name] == template_name }
+      end
+    else
+      fail 'Invalid template type given'
+    end
+
+    t
   end
 
   # Initializes PinPress by downloading and
@@ -70,20 +100,30 @@ module PinPress
       if from_scratch
         configuration.reset
         configuration.add_section(:pinpress)
-        configuration.add_section(:templates)
+        configuration.add_section(:pin_templates)
+        configuration.add_section(:tag_templates)
 
-        default_template = {
+        default_pin_template = {
           name: 'pinpress_default',
           opener: '<ul>',
           item: '<li><b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b> <%= extended %></li>',
+          item_separator: "\n",
           closer: '</ul>'
         }
 
-        configuration.data['templates'] = [default_template]
+        default_tag_template = {
+          name: 'pinpress_default',
+          item: "<%= tag %> (<%= count %>),",
+          item_separator: ","
+        }
+
+        configuration.data['pin_templates'] = [default_pin_template]
+        configuration.data['tag_templates'] = [default_tag_template]
         
         configuration.pinpress.merge!({
           config_location: configuration.config_path,
-          default_template: 'pinpress_default',
+          default_pin_template: 'pinpress_default',
+          default_tag_template: 'pinpress_default',
           log_level: 'WARN',
           version: PinPress::VERSION,
         })

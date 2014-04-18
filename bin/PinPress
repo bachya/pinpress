@@ -124,20 +124,17 @@ command :pins do |c|
   c.flag([:t], desc: 'The tags to use (e.g., "ruby,pinboard")')
 
   c.action do |global_options, options, args|
-    # Determine the template to use.
-    # template = PinPress.assign_template(args[0])
+    # Two scenarios covered here:
+    #   1. If the user passes a valid name, grab that template.
+    #   2. If no name is passed, grabbed the default template
+    # If both of these conditions fail, an error message is shown.
+    template_type = PinPress::Template::TEMPLATE_TYPE_PIN
+    template_name = args.empty? ? nil : args[0]
 
-    if args.empty?
-      template = PinPress.get_template
-    else
-      template = PinPress.get_template(args[0])
-    end
-
-    if !template.nil?
+    PinPress.execute_template(template_type, template_name) do |template, client|
       # Create a Pinboard client and set options based on
       # PinPress flags.
       opts = {}
-      client = Pinboard::Client.new(token: configuration.pinpress[:api_token])
       opts.merge!(todt: Chronic.parse(options[:e])) if options[:e]
       opts.merge!(results: options[:n]) if options[:n]
       opts.merge!(fromdt: Chronic.parse(options[:s])) if options[:s]
@@ -145,7 +142,7 @@ command :pins do |c|
       begin
         pins = client.posts(opts)
 
-        puts template[:opener]
+        print template.opener if template.opener
         pins.each do |p|
           href        = p[:href]
           description = p[:description]
@@ -155,19 +152,17 @@ command :pins do |c|
           replace     = p[:replace]
           shared      = p[:shared]
           toread      = p[:toread]
-
-          line = ERB.new <<-LINETEMPLATE
-  #{ template[:item] }
-          LINETEMPLATE
-          puts line.result(binding)
+          if template.item
+            item = template.item
+            item += template.item_separator unless p == pins.last
+            print ERB.new(item).result(binding)
+          end
         end
-        puts template[:closer]
+        print template.closer if template.closer
       rescue StandardError => e
         fail "Pinboard API failed; are you sure you've run " \
              " `pinpress init` (and that your API key is correct)?"
       end
-    else
-      fail 'Invalid template provided and/or no valid default template exists!'
     end
   end
 end
@@ -177,23 +172,70 @@ end
 #
 # Gets pins from Pinboard.
 # ------------------------------------------------------
-desc 'Work with templates for pin output'
+desc 'Get tags from Pinboard'
 command :tags do |c|
-  c.flag([:e], desc: 'The end date to pull pins to')
-  c.flag([:n], desc: 'The number of results to return')
-  c.flag([:s], desc: 'The start date to pull pins from')
-  c.flag([:t], desc: 'The tags to use (e.g., "ruby,pinboard")')
-
   c.desc 'Gets the unique tags based on the passed criteria'
-  c.command :all do |default|
-    default.action do |global_options, options, args|
-      client = Pinboard::Client.new(token: configuration.pinpress[:api_token])
-      begin
-        tags = client.tags_get
-        p tags
-      rescue StandardError => e
-        fail "Pinboard API failed; are you sure you've run " \
-             " `pinpress init` (and that your API key is correct)?"
+  c.command :all do |all|
+    all.action do |global_options, options, args|
+      template_type = PinPress::Template::TEMPLATE_TYPE_TAG
+      template_name = args.empty? ? nil : args[0]
+
+      PinPress.execute_template(template_type, template_name) do |template, client|
+        begin
+          tags = client.tags_get
+          print template.opener if template.opener
+          tags.each do |t|
+            tag   = t[:tag]
+            count = t[:count] 
+            if template.item
+              item = template.item
+              item += template.item_separator unless t == tags.last
+              print ERB.new(item).result(binding)
+            end
+          end
+          print template.closer if template.closer
+        rescue StandardError => e
+          fail "Pinboard API failed; are you sure you've run " \
+               " `pinpress init` (and that your API key is correct)?"
+        end
+      end
+    end
+  end
+  
+  c.desc 'Gets the tags used within a date range'
+  c.command :range do |range|
+    range.flag([:e], desc: 'The end date to pull pins to')
+    range.flag([:s], desc: 'The start date to pull pins from')
+    range.action do |global_options, options, args|
+      template_type = PinPress::Template::TEMPLATE_TYPE_TAG
+      template_name = args.empty? ? nil : args[0]
+
+      PinPress.execute_template(template_type, template_name) do |template, client|
+        opts = {}
+        opts.merge!(todt: Chronic.parse(options[:e])) if options[:e]
+        opts.merge!(fromdt: Chronic.parse(options[:s])) if options[:s]
+
+        begin
+          tags = []
+          pins = client.posts(opts)
+          pins.each { |p| tags = tags + p[:tag] }
+          tags = tags.uniq.map { |t| { tag: t, count: tags.count(t) } }
+
+          tags.each do |t|
+            tag   = t[:tag]
+            count = t[:count]
+
+            if template.item
+              item = template.item
+              item += template.item_separator unless t == tags.last
+              print ERB.new(item).result(binding)
+            end
+          end
+        rescue StandardError => e
+          p e.to_s
+          fail "Pinboard API failed; are you sure you've run " \
+               " `pinpress init` (and that your API key is correct)?"
+        end
       end
     end
   end
