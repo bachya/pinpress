@@ -73,6 +73,45 @@ $ pinpress init
 
 Initialization will prompt you to enter your Pinboard API token. Once, entered, this (and other pertinent data) will be stored in `~/.pinpress`.
 
+# Getting Pins
+
+```
+$ pinpress pins
+```
+
+This simple command will return all pins from the user's account and output them based on the [Pin Template](https://github.com/bachya/PinPress#templates "Pin Templates") provided.
+
+Pinpress also provides some flags that allow a user to define specific pins to grab:
+
+* `-s`: the start date to use (uses [Chronic](https://github.com/mojombo/chronic "Chronic"), which allows dates like "last Tuesday")
+* `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
+* `-n`: the number of pins to return (e.g., 20)
+* `-t`: a CSV list of tags to grab (e.g., "tag1,tag2")
+
+## Getting Pins From a Date Forward
+
+```
+$ pinpress pins -s 2014-01-01
+```
+
+...returns all pins from January 1, 2014 to the current day.
+
+## Getting Pins Until a Date
+
+```
+$ pinpress pins -e 2014-01-01
+```
+
+...returns all pins up to January 1, 2014.
+
+## Getting Tagged Pins
+
+```
+$ pinpress pins -t "ruby,cli"
+```
+
+...returns all pins tagged "ruby" *and* "cli".
+
 # Templates
 
 The first stop on the PinPress journey is templates. Templates are used to define how data should be output and are defined in `~/.pinpress` and come in two forms: **Pin Templates** and **Tag Templates**. 
@@ -115,6 +154,30 @@ Additionally, a Pin Template can make use of several different tokens that are f
 * `<%= replace %>`: the replacement status of the pin
 * `<%= shared %>`: the privacy status of the pin
 * `<%= toread %>`: the "to-read" status of the pin
+
+### Usage
+
+Pin Templates can be used in two ways: they can either be called dynamically:
+
+```
+$ pinpress pins template_name
+```
+
+...or a default template can be specified in `~/.pinpress`:
+
+```
+---
+pinpress:
+  config_location: "/Users/abach/.pinpress"
+  default_pin_template: pinpress_default
+  # ... other keys ...
+```
+
+...which will use the `pinpress_default` template when running:
+
+```
+$ pinpress pins
+```
 
 # Known Issues & Future Releases
 
