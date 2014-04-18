@@ -9,7 +9,7 @@ PinPress is a simple CLI to create templates (HTML, Markdown, or otherwise) of P
 
 Every two weeks, I create a "link mash" for my website; this link mash consists of URLs that I find interesting and want to share with my readers. Previously, I would save those interesting URLs to an Evernote note and, every two weeks, manually create my link mash. <barf/>
 
-When I began using [Pinboard](http://pinboard.in "Pinboard") to save interesting links, I knew I needed a better method. This tool is the result
+When I began using [Pinboard](http://pinboard.in "Pinboard") to save interesting links, I knew I needed a better method. This tool is the result.
 
 # Prerequisites
 
@@ -50,7 +50,7 @@ COMMANDS
 
 Note that each command's options can be revealed by adding the `--help` switch after the command. For example:
 
-```
+```Bash
 $ pinpress pins --help
 NAME
     pins - Get posts from Pinboard
@@ -64,6 +64,24 @@ COMMAND OPTIONS
     -s arg - The start date to pull pins from (default: none)
     -t arg - The tags to use (e.g., "ruby,pinboard") (default: none)
 ```
+
+## Initialization
+
+```
+$ pinpress init
+```
+
+Initialization will prompt you to enter your Pinboard API token. Once, entered, this (and other pertinent data) will be stored in `~/.pinpress`.
+
+## Templates
+
+The first stop on the PinPress journey is templates. Templates are defined in `~/.pinpress` and come in two forms: **Pin Templates** and **Tag Templates**.
+
+### Pin Templates
+
+Pin Templates are placed under the `pin_templates` section of the `~/.pinpress` config file:
+
+
 
 # Known Issues & Future Releases
 
