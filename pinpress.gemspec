@@ -1,5 +1,5 @@
 # coding: utf-8
-require File.join([File.dirname(__FILE__),'lib','pinpress','constants'])
+require File.join([File.dirname(__FILE__), 'lib', 'pinpress', 'constants.rb'])
 
 Gem::Specification.new do |spec| 
   spec.name             = 'pinpress'
