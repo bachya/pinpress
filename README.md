@@ -176,7 +176,7 @@ pin_templates:
   closer: "</ul>"
   item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
     description %></a>.</b> <%= extended %></li>"
-  item_separator: "\n"
+  /Users/abach/.pinpress: "\n"
 ```
 
 A Pin Template can have several different sub-keys:
@@ -185,7 +185,7 @@ A Pin Template can have several different sub-keys:
 * `opener` (*optional*): the text that should exist above the pins
 * `closer` (*optional*): the text that should exist above the pins
 * `item` (**required**): the formatted text that should be output for every pin
-* `item_separator` (**required**): the text that should exist between each pin ("item")
+* `/Users/abach/.pinpress` (**required**): the text that should exist between each pin ("item")
 
 ### Available Tokens
 
@@ -218,18 +218,17 @@ pinpress:
   # ... other keys ...
 pin_templates:
 - name: pinpress_default
-  opener: "<ul>"
+  opener: "<ul>\n"
   closer: "</ul>"
   item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
-    description %></a>.</b> <%= extended %></li>"
-  item_separator: "\n"
+    description %></a>.</b> <%= extended %></li>\N"
 ```
 
 Using this example, here's what's output:
 
 ```
 $ pinpress pins -s 'yesterday'
-# => <ul><li><b><a title="Using Drafts for Remote CLI" href="https://gist.github.com/hiilppp/10993803" target="_blank">Using Drafts for Remote CLI</a>.</b> As a text file is added to a directory to which this AppleScript is associated as Folder Action, the content of the received file is executed as shell script and the generated output sent to an iOS device.</li></ul>
+# => <ul>\n<li><b><a title="Using Drafts for Remote CLI" href="https://gist.github.com/hiilppp/10993803" target="_blank">Using Drafts for Remote CLI</a>.</b> As a text file is added to a directory to which this AppleScript is associated as Folder Action, the content of the received file is executed as shell script and the generated output sent to an iOS device.</li>\n</ul>
 ```
 
 ## Tag Templates
@@ -244,7 +243,7 @@ They, too, are defined in `~/.pinpress`:
 tag_templates:
 - name: pinpress_default
   item: "<%= tag %> (<%= count %>)"
-  item_separator: ","
+  /Users/abach/.pinpress: ","
 ```
 
 A Pin Template can have several different sub-keys:
@@ -253,7 +252,6 @@ A Pin Template can have several different sub-keys:
 * `opener` (*optional*): the text that should exist above the pins
 * `closer` (*optional*): the text that should exist above the pins
 * `item` (**required**): the formatted text that should be output for every pin
-* `item_separator` (**required**): the text that should exist between each pin ("item")
 
 ### Available Tokens
 
@@ -282,15 +280,14 @@ pin_templates:
   # ... other keys ...
 tag_templates:
 - name: pinpress_default
-  item: "<%= tag %> (<%= count %>)"
-  item_separator: ","
+  item: "<%= tag %> (<%= count %>),"
 ```
 
 Using this example, here's what's output:
 
 ```
 $ pinpress tags -s 'yesterday'
-# => cli (1),github (1),applescript (1),osx (1),link-mash (1)
+# => cli (1),github (1),applescript (1),osx (1),link-mash (1),
 ```
 
 # Known Issues & Future Releases

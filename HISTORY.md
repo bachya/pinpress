@@ -1,6 +1,10 @@
-# 1.0.2 (2014-04-17)
+# 1.1.0 (2014-04-17)
 
-* Fixed a configuration version bug
+* Added default tags
+* Added default number of results
+* Rubocop refactoring
+* Documentation
+* Several bugfixes
 
 # 1.0.1 (2014-04-17)
 

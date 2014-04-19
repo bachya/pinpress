@@ -7,23 +7,31 @@ Feature: Initialization
     Given no file located at "/tmp/pp/.pinpress"
     When I run `pinpress init` interactively
       And I type ""
-      And I type "12345"
+      And I type "bachya:12345"
     Then the exit status should be 0
       And the file "/tmp/pp/.pinpress" should contain:
       """
       ---
       pinpress:
         config_location: "/tmp/pp/.pinpress"
-        default_template: pinpress_default
+        default_pin_template: pinpress_default
+        default_tag_template: pinpress_default
         log_level: WARN
-        version: 1.0.1
-        api_token: '12345'
-      templates:
+        version: 1.1.0
+        api_token: bachya:12345
+      pin_templates:
       - name: pinpress_default
-        opener: "<ul>"
-        item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
-          description %></a>.</b> <%= extended %></li>"
+        opener: |
+          <ul>
+        item: |
+          <li>
+          <b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
+          <%= extended %>
+          </li>
         closer: "</ul>"
+      tag_templates:
+      - name: pinpress_default
+        item: "<%= tag %> (<%= count %>),"
       """
 
   Scenario: Reinitialization (refuse)
@@ -32,16 +40,24 @@ Feature: Initialization
     ---
     pinpress:
       config_location: "/tmp/pp/.pinpress"
-      default_template: pinpress_default
+      default_pin_template: pinpress_default
+      default_tag_template: pinpress_default
       log_level: WARN
-      version: 1.0.1
-      api_token: '12345'
-    templates:
+      version: 1.1.0
+      api_token: bachya:12345
+    pin_templates:
     - name: pinpress_default
-      opener: "<ul>"
-      item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
-        description %></a>.</b> <%= extended %></li>"
+      opener: |
+        <ul>
+      item: |
+        <li>
+        <b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
+        <%= extended %>
+        </li>
       closer: "</ul>"
+    tag_templates:
+    - name: pinpress_default
+      item: "<%= tag %> (<%= count %>),"
     """
     When I run `pinpress init` interactively
       And I type ""
@@ -53,37 +69,53 @@ Feature: Initialization
     ---
     pinpress:
       config_location: "/tmp/pp/.pinpress"
-      default_template: pinpress_default
+      default_pin_template: pinpress_default
+      default_tag_template: pinpress_default
       log_level: WARN
-      version: 1.0.1
-      api_token: '12345'
-    templates:
+      version: 1.1.0
+      api_token: bachya:12345
+    pin_templates:
     - name: pinpress_default
-      opener: "<ul>"
-      item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
-        description %></a>.</b> <%= extended %></li>"
+      opener: |
+        <ul>
+      item: |
+        <li>
+        <b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
+        <%= extended %>
+        </li>
       closer: "</ul>"
+    tag_templates:
+    - name: pinpress_default
+      item: "<%= tag %> (<%= count %>),"
     """
     When I run `pinpress init` interactively
       And I type "y"
       And I type ""
-      And I type "12345"
+      And I type "bachya:12345"
     Then the exit status should be 0
       And the file "/tmp/pp/.pinpress" should contain:
       """
       ---
       pinpress:
         config_location: "/tmp/pp/.pinpress"
-        default_template: pinpress_default
+        default_pin_template: pinpress_default
+        default_tag_template: pinpress_default
         log_level: WARN
-        version: 1.0.1
-        api_token: '12345'
-      templates:
+        version: 1.1.0
+        api_token: bachya:12345
+      pin_templates:
       - name: pinpress_default
-        opener: "<ul>"
-        item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
-          description %></a>.</b> <%= extended %></li>"
+        opener: |
+          <ul>
+        item: |
+          <li>
+          <b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
+          <%= extended %>
+          </li>
         closer: "</ul>"
+      tag_templates:
+      - name: pinpress_default
+        item: "<%= tag %> (<%= count %>),"
       """
         
   Scenario: Reinitialization (from scratch)
@@ -92,34 +124,50 @@ Feature: Initialization
     ---
     pinpress:
       config_location: "/tmp/pp/.pinpress"
-      default_template: pinpress_default
+      default_pin_template: pinpress_default
+      default_tag_template: pinpress_default
       log_level: WARN
-      version: 1.0.1
-      api_token: '12345'
-    templates:
+      version: 1.1.0
+      api_token: bachya:12345
+    pin_templates:
     - name: pinpress_default
-      opener: "<ul>"
-      item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
-        description %></a>.</b> <%= extended %></li>"
+      opener: |
+        <ul>
+      item: |
+        <li>
+        <b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
+        <%= extended %>
+        </li>
       closer: "</ul>"
+    tag_templates:
+    - name: pinpress_default
+      item: "<%= tag %> (<%= count %>),"
     """
     When I run `pinpress init -s` interactively
       And I type ""
-      And I type "12345"
+      And I type "bachya:12345"
     Then the exit status should be 0
       And the file "/tmp/pp/.pinpress" should contain:
       """
       ---
       pinpress:
         config_location: "/tmp/pp/.pinpress"
-        default_template: pinpress_default
+        default_pin_template: pinpress_default
+        default_tag_template: pinpress_default
         log_level: WARN
-        version: 1.0.1
-        api_token: '12345'
-      templates:
+        version: 1.1.0
+        api_token: bachya:12345
+      pin_templates:
       - name: pinpress_default
-        opener: "<ul>"
-        item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
-          description %></a>.</b> <%= extended %></li>"
+        opener: |
+          <ul>
+        item: |
+          <li>
+          <b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
+          <%= extended %>
+          </li>
         closer: "</ul>"
+      tag_templates:
+      - name: pinpress_default
+        item: "<%= tag %> (<%= count %>),"
       """

@@ -10,47 +10,10 @@ module PinPress
     # Stores whether initalization has completed.
     # @return [Boolean]
     attr_reader :initialized
-    
+
     # Stores whether verbose output is turned on.
     # @return [Boolean]
     attr_accessor :verbose
-  end
-
-  # Presents the user with a list of templates and
-  # allows them to choose one.
-  # @return [void]
-  def self.choose_default_template
-    templates = configuration.templates
-    if !templates.nil?
-      messenger.section('CHOOSE A DEFAULT TEMPLATE')
-      messenger.success("Current Default Template: #{ configuration.pinpress[:default_template] }")
-      messenger.info("Choose a New Template:")
-      templates.each_with_index do |template, index|
-        messenger.info("#{ index + 1}. #{ template[:name] }")
-      end
-
-      # Loop through the possible template choices and collect the user's
-      # input. If a valid choice is made, set the default; otherwise,
-      # force the user to pick.
-      valid_choice_made = false
-      until valid_choice_made
-        choice = messenger.prompt("Choose from the list above")
-        array_index = choice.to_i - 1
-        
-        if array_index >= 0 && !templates[array_index].nil?
-          default_template_name = templates[array_index][:name]
-          configuration.pinpress[:default_template] = default_template_name
-          configuration.save
-        
-          messenger.success("New default template chosen: #{ default_template_name }")
-          valid_choice_made = true
-        else
-          messenger.error("Invalid choice: #{ choice }")
-        end
-      end
-    else
-      messenger.warn('No templates defined...')
-    end
   end
 
   def self.execute_template(template_type, template_name)
@@ -72,23 +35,19 @@ module PinPress
     case template_type
     when Template::TEMPLATE_TYPE_PIN
       default_t_name = configuration.pinpress[:default_pin_template]
-      if template_name.nil?
-        t = configuration.pin_templates.find { |t| t[:name] == default_t_name }
-      else
-        t = configuration.pin_templates.find { |t| t[:name] == template_name }
-      end
+      templates = configuration.pin_templates
     when Template::TEMPLATE_TYPE_TAG
       default_t_name = configuration.pinpress[:default_tag_template]
-      if template_name.nil?
-        t = configuration.tag_templates.find { |t| t[:name] == default_t_name }
-      else
-        t = configuration.tag_templates.find { |t| t[:name] == template_name }
-      end
+      templates = configuration.tag_templates
     else
       fail 'Invalid template type given'
     end
 
-    t
+    if template_name.nil?
+      return templates.find { |t| t[:name] == default_t_name }
+    else
+      return templates.find { |t| t[:name] == template_name }
+    end
   end
 
   # Initializes PinPress by downloading and
@@ -96,56 +55,69 @@ module PinPress
   # @param [Boolean] from_scratch
   # @return [void]
   def self.init(from_scratch = false)
-    messenger.section_block('INITIALIZING') {
-      if from_scratch
-        configuration.reset
-        configuration.add_section(:pinpress)
-        configuration.add_section(:pin_templates)
-        configuration.add_section(:tag_templates)
+    messenger.section('INITIALIZING...')
+    if from_scratch
+      configuration.reset
+      configuration.add_section(:pinpress)
+      configuration.add_section(:pin_templates)
+      configuration.add_section(:tag_templates)
 
-        default_pin_template = {
-          name: 'pinpress_default',
-          opener: '<ul>',
-          item: '<li><b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b> <%= extended %></li>',
-          item_separator: "\n",
-          closer: '</ul>'
-        }
+      default_pin_template = {
+        name: 'pinpress_default',
+        opener: "<ul>\n",
+        item: %q(<li>
+<b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
+<%= extended %>
+</li>) + "\n",
+        closer: '</ul>'
+      }
 
-        default_tag_template = {
-          name: 'pinpress_default',
-          item: "<%= tag %> (<%= count %>),",
-          item_separator: ","
-        }
+      default_tag_template = {
+        name: 'pinpress_default',
+        item: '<%= tag %> (<%= count %>),'
+      }
 
-        configuration.data['pin_templates'] = [default_pin_template]
-        configuration.data['tag_templates'] = [default_tag_template]
-        
-        configuration.pinpress.merge!({
-          config_location: configuration.config_path,
-          default_pin_template: 'pinpress_default',
-          default_tag_template: 'pinpress_default',
-          log_level: 'WARN',
-          version: PinPress::VERSION,
-        })
-      end
+      configuration.data['pin_templates'] = [default_pin_template]
+      configuration.data['tag_templates'] = [default_tag_template]
 
-      pm = CLIUtils::Prefs.new(PinPress::PREF_FILES['INIT'], configuration)
-      pm.ask
-      configuration.ingest_prefs(pm)
+      configuration.pinpress.merge!(
+        config_location: configuration.config_path,
+        default_pin_template: 'pinpress_default',
+        default_tag_template: 'pinpress_default',
+        log_level: 'WARN',
+        version: PinPress::VERSION
+      )
+    end
 
-      messenger.debug { "Configuration values after pref collection: #{ configuration.data }" }
-      configuration.save
-      @initialized = true
+    pm = CLIUtils::Prefs.new(PinPress::PREF_FILES['INIT'], configuration)
+    pm.ask
+    configuration.ingest_prefs(pm)
+
+    messenger.debug {
+      "Configuration values after pref collection: #{ configuration.data }"
     }
+    configuration.save
+    @initialized = true
   end
 
   # Present a list of installed templates to the user
   # @return [void]
   def self.list_templates
-    templates = configuration.templates
-    if !templates.nil?
-      messenger.section('AVAILABLE TEMPLATES')
-      templates.each_with_index do |template, index|
+    pin_templates = configuration.pin_templates
+    tag_templates = configuration.tag_templates
+
+    messenger.section('AVAILABLE PIN TEMPLATES:')
+    if !pin_templates.nil?
+      pin_templates.each_with_index do |template, index|
+        messenger.info("#{ index + 1 }. #{ template[:name] }")
+      end
+    else
+      messenger.warn('No templates defined...')
+    end
+
+    messenger.section('AVAILABLE TAG TEMPLATES:')
+    if !tag_templates.nil?
+      tag_templates.each_with_index do |template, index|
         messenger.info("#{ index + 1 }. #{ template[:name] }")
       end
     else

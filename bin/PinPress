@@ -60,7 +60,7 @@ pre do |global, command, options, args|
   file_logger.level = LOG_LEVELS[configuration.pinpress[:log_level] || 'DEBUG']
   messenger.attach(LOGFILE: file_logger)
 
-  if File.exists?(PinPress::CONFIG_FILEPATH)
+  if File.exist?(PinPress::CONFIG_FILEPATH)
     # Set the current and last config versions in the Configurator.
     configuration.current_version = configuration.pinpress[:version]
     configuration.last_version = PinPress::NEWEST_CONFIG_VERSION
@@ -72,14 +72,15 @@ pre do |global, command, options, args|
       exit!(0)
     end
   else
-    # Force the user to init if they try to run any command other than `init` first.
+    # Force the user to init if they try to run any command
+    # other than `init` first.
     PinPress.init(true)
     exit!(0)
   end
   true
 end
 
-post do |global,command,options,args|
+post do |global, command, options, args|
 
 end
 
@@ -100,7 +101,7 @@ end
 # ------------------------------------------------------
 desc 'Install and initialize dependencies'
 command :init do |c|
-  c.switch([:s], desc: 'Run init from scratch (i.e., clear out all values from configuration)')
+  c.switch([:s], desc: 'Run init from scratch')
   c.action do |global_options, options, args|
     if options[:s]
       PinPress.init(true)
@@ -116,7 +117,7 @@ end
 #
 # Gets pins from Pinboard.
 # ------------------------------------------------------
-desc 'Get posts from Pinboard'
+desc 'Get pins from Pinboard'
 command :pins do |c|
   c.flag([:e], desc: 'The end date to pull pins to')
   c.flag([:n], desc: 'The number of results to return')
@@ -128,39 +129,51 @@ command :pins do |c|
     #   1. If the user passes a valid name, grab that template.
     #   2. If no name is passed, grabbed the default template
     # If both of these conditions fail, an error message is shown.
-    template_type = PinPress::Template::TEMPLATE_TYPE_PIN
-    template_name = args.empty? ? nil : args[0]
+    t_type = PinPress::Template::TEMPLATE_TYPE_PIN
+    t_name = args.empty? ? nil : args[0]
 
-    PinPress.execute_template(template_type, template_name) do |template, client|
+    PinPress.execute_template(t_type, t_name) do |template, client|
       # Create a Pinboard client and set options based on
       # PinPress flags.
       opts = {}
       opts.merge!(todt: Chronic.parse(options[:e])) if options[:e]
-      opts.merge!(results: options[:n]) if options[:n]
       opts.merge!(fromdt: Chronic.parse(options[:s])) if options[:s]
-      opts.merge!(tag: options[:t]) if options[:t]
+
+      if options[:n]
+        opts.merge!(results: options[:n])
+      elsif configuration.pinpress[:default_num_results]
+        opts.merge!(results: configuration.pinpress[:default_num_results])
+      end
+
+      if options[:t]
+        opts.merge!(tag: options[:t])
+      elsif configuration.pinpress[:default_tags]
+        opts.merge!(tag: configuration.pinpress[:default_tags])
+      end
+
       begin
         pins = client.posts(opts)
+        if !pins.empty?
+          print template.opener if template.opener
+          pins.each do |p|
+            href        = p[:href]
+            description = p[:description]
+            extended    = p[:extended]
+            tag         = p[:tag]
+            time        = p[:time]
+            replace     = p[:replace]
+            shared      = p[:shared]
+            toread      = p[:toread]
 
-        print template.opener if template.opener
-        pins.each do |p|
-          href        = p[:href]
-          description = p[:description]
-          extended    = p[:extended]
-          tag         = p[:tag]
-          time        = p[:time]
-          replace     = p[:replace]
-          shared      = p[:shared]
-          toread      = p[:toread]
-          if template.item
-            item = template.item
-            item += template.item_separator unless p == pins.last
-            print ERB.new(item).result(binding)
+            print ERB.new(template.item).result(binding) if template.item
           end
+          print template.closer if template.closer
+        else
+          messenger.warn('No matching pins...')
         end
-        print template.closer if template.closer
       rescue StandardError => e
-        fail "Pinboard API failed; are you sure you've run " \
+        messenger.debug(e.to_s)
+        raise "Pinboard API failed; are you sure you've run " \
              " `pinpress init` (and that your API key is correct)?"
       end
     end
@@ -176,36 +189,38 @@ desc 'Get tags from Pinboard'
 command :tags do |c|
   c.flag([:e], desc: 'The end date to pull pins to')
   c.flag([:s], desc: 'The start date to pull pins from')
-  
+
   c.desc 'Gets the unique tags based on the passed criteria'
   c.action do |global_options, options, args|
-    template_type = PinPress::Template::TEMPLATE_TYPE_TAG
-    template_name = args.empty? ? nil : args[0]
+    t_type = PinPress::Template::TEMPLATE_TYPE_TAG
+    t_name = args.empty? ? nil : args[0]
 
-    PinPress.execute_template(template_type, template_name) do |template, client|
+    PinPress.execute_template(t_type, t_name) do |template, client|
+      tags = []
       opts = {}
       opts.merge!(todt: Chronic.parse(options[:e])) if options[:e]
       opts.merge!(fromdt: Chronic.parse(options[:s])) if options[:s]
 
       begin
-        tags = []
         pins = client.posts(opts)
-        pins.each { |p| tags = tags + p[:tag] }
+        pins.each { |p| tags += p[:tag] }
         tags = tags.uniq.map { |t| { tag: t, count: tags.count(t) } }
 
-        tags.each do |t|
-          tag   = t[:tag]
-          count = t[:count]
+        if !tags.empty?
+          print template.opener if template.opener
+          tags.each do |t|
+            tag   = t[:tag]
+            count = t[:count]
 
-          if template.item
-            item = template.item
-            item += template.item_separator unless t == tags.last
-            print ERB.new(item).result(binding)
+            print ERB.new(template.item).result(binding) if template.item
           end
+       print template.closer if template.closer
+        else
+          message.warn('No matching tags...')
         end
       rescue StandardError => e
-        p e.to_s
-        fail "Pinboard API failed; are you sure you've run " \
+        messenger.debug(e.to_s)
+        raise "Pinboard API failed; are you sure you've run " \
              " `pinpress init` (and that your API key is correct)?"
       end
     end
@@ -219,13 +234,6 @@ end
 # ------------------------------------------------------
 desc 'Work with templates for pin output'
 command :templates do |c|
-  c.desc 'Choose the default template'
-  c.command :default do |default|
-    default.action do |global_options, options, args|
-      PinPress.choose_default_template
-    end
-  end
-
   c.desc 'List current templates'
   c.command :list do |list|
     list.action do |global_options, options, args|
