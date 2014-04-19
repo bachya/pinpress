@@ -73,6 +73,124 @@ $ pinpress init
 
 Initialization will prompt you to enter your Pinboard API token. Once, entered, this (and other pertinent data) will be stored in `~/.pinpress`.
 
+# Templates
+
+The first stop on the PinPress journey is templates. Templates are used to define how data should be output and are defined in `~/.pinpress`. They come in two forms: **Pin Templates** and **Tag Templates**. 
+
+## Pin Templates
+
+Pin Templates define how a pin from Pinboard should be output.
+
+### Schema
+
+Pin Templates are placed under the `pin_templates` section of the `~/.pinpress` config file -- as an example:
+
+```YAML
+pin_templates:
+- name: pinpress_default
+  opener: "<ul>"
+  closer: "</ul>"
+  item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
+    description %></a>.</b> <%= extended %></li>"
+  /Users/abach/.pinpress: "\n"
+```
+
+A Pin Template can have several different sub-keys:
+
+* `name` (**required**): the name of the template
+* `opener` (*optional*): the text that should exist above the pins
+* `closer` (*optional*): the text that should exist above the pins
+* `item` (**required**): the formatted text that should be output for every pin
+
+### Available Tokens
+
+Additionally, a Pin Template can make use of several different tokens that are filled by a pin's values:
+
+* `<%= href %>`: the URL of the pin
+* `<%= description %>`: the description of the pin
+* `<%= extended %>`: the pin's longer assocated description
+* `<%= tag %>`: the CSV list of tags that apply to the pin
+* `<%= time %>`: the time the pin was added to Pinboard
+* `<%= replace %>`: the replacement status of the pin
+* `<%= shared %>`: the privacy status of the pin
+* `<%= toread %>`: the "to-read" status of the pin
+
+### Usage
+
+Pin Templates can be used in two ways: they can either be called dynamically:
+
+```
+$ pinpress pins template_name
+```
+
+...or a default template can be specified in `~/.pinpress`:
+
+```
+---
+pinpress:
+  config_location: "/Users/abach/.pinpress"
+  default_pin_template: pinpress_default
+  # ... other keys ...
+pin_templates:
+- name: pinpress_default
+  opener: "<ul>\n"
+  closer: "</ul>"
+  item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
+    description %></a>.</b> <%= extended %></li>\N"
+```
+
+## Tag Templates
+
+Tag Templates are exactly like Pin Templates, but are used for tags.
+
+### Schema
+
+They, too, are defined in `~/.pinpress`:
+
+```YAML
+tag_templates:
+- name: pinpress_default
+  item: "<%= tag %> (<%= count %>)"
+  /Users/abach/.pinpress: ","
+```
+
+A Pin Template can have several different sub-keys:
+
+* `name` (**required**): the name of the template
+* `opener` (*optional*): the text that should exist above the pins
+* `closer` (*optional*): the text that should exist above the pins
+* `item` (**required**): the formatted text that should be output for every pin
+
+### Available Tokens
+
+Additionally, a Pin Template can make use of several different tokens that are filled by a pin's values:
+
+* `<%= tag %>`: the name of the tag
+* `<%= count %>`: the number of times the tag has been used in the range
+
+### Usage
+
+Pin Templates can be used in two ways: they can either be called dynamically:
+
+```
+$ pinpress tags template_name
+```
+
+...or a default template can be specified in `~/.pinpress`:
+
+```
+---
+pinpress:
+  config_location: "/Users/abach/.pinpress"
+  default_tag_template: pinpress_default
+  # ... other keys ...
+pin_templates:
+  # ... other keys ...
+tag_templates:
+- name: pinpress_default
+  item: "<%= tag %> (<%= count %>),"
+```
+
 # Getting Pins
 
 ```
@@ -157,138 +275,12 @@ $ pinpress tags -e 2014-01-01
 $ pinpress tags -s 2014-01-01 -e 2014-01-31
 ```
 
-# Templates
+# Other Configuration Options
 
-The first stop on the PinPress journey is templates. Templates are used to define how data should be output and are defined in `~/.pinpress` and come in two forms: **Pin Templates** and **Tag Templates**. 
+In addition to `default_pin_template` and `default_tag_template`, you can place some other special keys in the `pinpress` section of `~/.pinpress`:
 
-## Pin Templates
-
-Pin Templates define how a pin should be output.
-
-### Schema
-
-Pin Templates are placed under the `pin_templates` section of the `~/.pinpress` config file -- as an example:
-
-```YAML
-pin_templates:
-- name: pinpress_default
-  opener: "<ul>"
-  closer: "</ul>"
-  item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
-    description %></a>.</b> <%= extended %></li>"
-  /Users/abach/.pinpress: "\n"
-```
-
-A Pin Template can have several different sub-keys:
-
-* `name` (**required**): the name of the template
-* `opener` (*optional*): the text that should exist above the pins
-* `closer` (*optional*): the text that should exist above the pins
-* `item` (**required**): the formatted text that should be output for every pin
-* `/Users/abach/.pinpress` (**required**): the text that should exist between each pin ("item")
-
-### Available Tokens
-
-Additionally, a Pin Template can make use of several different tokens that are filled by a pin's values:
-
-* `<%= href %>`: the URL of the pin
-* `<%= description %>`: the description of the pin
-* `<%= extended %>`: the pin's longer assocated description
-* `<%= tag %>`: the CSV list of tags that apply to the pin
-* `<%= time %>`: the time the pin was added to Pinboard
-* `<%= replace %>`: the replacement status of the pin
-* `<%= shared %>`: the privacy status of the pin
-* `<%= toread %>`: the "to-read" status of the pin
-
-### Usage
-
-Pin Templates can be used in two ways: they can either be called dynamically:
-
-```
-$ pinpress pins template_name
-```
-
-...or a default template can be specified in `~/.pinpress`:
-
-```
----
-pinpress:
-  config_location: "/Users/abach/.pinpress"
-  default_pin_template: pinpress_default
-  # ... other keys ...
-pin_templates:
-- name: pinpress_default
-  opener: "<ul>\n"
-  closer: "</ul>"
-  item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
-    description %></a>.</b> <%= extended %></li>\N"
-```
-
-Using this example, here's what's output:
-
-```
-$ pinpress pins -s 'yesterday'
-# => <ul>\n<li><b><a title="Using Drafts for Remote CLI" href="https://gist.github.com/hiilppp/10993803" target="_blank">Using Drafts for Remote CLI</a>.</b> As a text file is added to a directory to which this AppleScript is associated as Folder Action, the content of the received file is executed as shell script and the generated output sent to an iOS device.</li>\n</ul>
-```
-
-## Tag Templates
-
-Tag Templates are exactly like Pin Templates, but are used for tags.
-
-### Schema
-
-They, too, are defined in `~/.pinpress`:
-
-```YAML
-tag_templates:
-- name: pinpress_default
-  item: "<%= tag %> (<%= count %>)"
-  /Users/abach/.pinpress: ","
-```
-
-A Pin Template can have several different sub-keys:
-
-* `name` (**required**): the name of the template
-* `opener` (*optional*): the text that should exist above the pins
-* `closer` (*optional*): the text that should exist above the pins
-* `item` (**required**): the formatted text that should be output for every pin
-
-### Available Tokens
-
-Additionally, a Pin Template can make use of several different tokens that are filled by a pin's values:
-
-* `<%= tag %>`: the name of the tag
-* `<%= count %>`: the number of times the tag has been used in the range
-
-### Usage
-
-Pin Templates can be used in two ways: they can either be called dynamically:
-
-```
-$ pinpress tags template_name
-```
-
-...or a default template can be specified in `~/.pinpress`:
-
-```
----
-pinpress:
-  config_location: "/Users/abach/.pinpress"
-  default_tag_template: pinpress_default
-  # ... other keys ...
-pin_templates:
-  # ... other keys ...
-tag_templates:
-- name: pinpress_default
-  item: "<%= tag %> (<%= count %>),"
-```
-
-Using this example, here's what's output:
-
-```
-$ pinpress tags -s 'yesterday'
-# => cli (1),github (1),applescript (1),osx (1),link-mash (1),
-```
+* `default_tags`: the default tags to be used when getting pins (e.g., `'ruby,pinboard'`). This can be overridden by using the `-t` flag.
+* `default_num_results`: the default number of results to return (e.g., '5'). This can be overridden by using the `-n` flag.
 
 # Known Issues & Future Releases
 
