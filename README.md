@@ -88,18 +88,17 @@ Pin Templates are placed under the `pin_templates` section of the `~/.pinpress` 
 ```YAML
 pin_templates:
 - name: pinpress_default
-  opener: "<ul>"
+  opener: "<ul\n"
   closer: "</ul>"
   item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
-    description %></a>.</b> <%= extended %></li>"
-  /Users/abach/.pinpress: "\n"
+    description %></a>.</b> <%= extended %></li>\n"
 ```
 
 A Pin Template can have several different sub-keys:
 
 * `name` (**required**): the name of the template
 * `opener` (*optional*): the text that should exist above the pins
-* `closer` (*optional*): the text that should exist above the pins
+* `closer` (*optional*): the text that should exist below the pins
 * `item` (**required**): the formatted text that should be output for every pin
 
 ### Available Tokens
@@ -139,6 +138,12 @@ pin_templates:
     description %></a>.</b> <%= extended %></li>\N"
 ```
 
+The default template will be used when the `pins` command is run without any arguments:
+
+```
+$ pinpress pins
+```
+
 ## Tag Templates
 
 Tag Templates are exactly like Pin Templates, but are used for tags.
@@ -150,15 +155,14 @@ They, too, are defined in `~/.pinpress`:
 ```YAML
 tag_templates:
 - name: pinpress_default
-  item: "<%= tag %> (<%= count %>)"
-  /Users/abach/.pinpress: ","
+  item: "<%= tag %> (<%= count %>),"
 ```
 
 A Pin Template can have several different sub-keys:
 
 * `name` (**required**): the name of the template
-* `opener` (*optional*): the text that should exist above the pins
-* `closer` (*optional*): the text that should exist above the pins
+* `opener` (*optional*): the text that should exist above the tags
+* `closer` (*optional*): the text that should exist below the tags
 * `item` (**required**): the formatted text that should be output for every pin
 
 ### Available Tokens
@@ -191,11 +195,20 @@ tag_templates:
   item: "<%= tag %> (<%= count %>),"
 ```
 
+Again, the default template will be used when the `tags` command is run without any arguments:
+
+```
+$ pinpress tags
+```
+
 # Getting Pins
 
 ```
 $ pinpress pins
-# => <ul><li><b><a title="Using Drafts for Remote CLI" href="https://gist.github.com/hiilppp/10993803" target="_blank">Using Drafts for Remote CLI</a>.</b> As a text file is added to a directory to which this AppleScript is associated as Folder Action, the content of the received file is executed as shell script and the generated output sent to an iOS device.</li></ul>
+# => <ul>
+#         <li><b><a title="Using Drafts for Remote CLI" href="https://gist.github.com/hiilppp/10993803" target="_blank">Using Drafts for Remote CLI</a>.</b> As a text file is added to a directory to which this AppleScript is associated as Folder Action, the content of the received file is executed as shell script and the generated output sent to an iOS device.
+#         </li>
+#       </ul>
 ```
 
 This simple command will return all pins from the user's account and output them based on the [Pin Template](https://github.com/bachya/PinPress#pin-templates "Pin Templates") provided.
@@ -206,6 +219,8 @@ Pinpress also provides some flags that allow a user to define specific pins to g
 * `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
 * `-n`: the number of pins to return (e.g., 20)
 * `-t`: a CSV list of tags to grab (e.g., "tag1,tag2")
+
+Naturally, these switches can be combined in any number of ways.
 
 ## Getting Pins From a Date Forward
 
@@ -243,7 +258,7 @@ Pinpress can also work with tags in a Pinboard account:
 
 ```
 $ pinpress tags
-# => cli (1),github (1),applescript (1),osx (1),link-mash (1)
+# => cli (1),github (1),applescript (1),osx (1),link-mash (1),
 ```
 
 This simple command will return all tags from the user's account and output them based on the [Tag Template](https://github.com/bachya/PinPress#tag-templates "Tag Templates") provided.
