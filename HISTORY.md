@@ -1,4 +1,10 @@
-# 1.1.0 (2014-04-17)
+# 1.1.1 (2014-04-19)
+
+* Small bugfixes
+* Documentation
+* Soem file renaming
+
+# 1.1.0 (2014-04-18)
 
 * Added default tags
 * Added default number of results
