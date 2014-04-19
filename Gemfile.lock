@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pinpress (1.1.0)
+    pinpress (1.1.1)
       chronic (= 0.10.2)
       cliutils (~> 2.0)
       gli (= 2.9.0)
