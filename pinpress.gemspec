@@ -1,7 +1,5 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'pinpress/constants'
+require File.join([File.dirname(__FILE__),'lib','pinpress','constants'])
 
 Gem::Specification.new do |spec| 
   spec.name             = 'pinpress'
