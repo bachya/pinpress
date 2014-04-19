@@ -1,4 +1,4 @@
-require File.join(File.expand_path([File.dirname(__FILE__)), 'lib', 'pinpress', 'constants.rb'])
+require File.join(File.expand_path(File.dirname(__FILE__)), 'lib', 'pinpress', 'constants.rb'))
 Gem::Specification.new do |spec|
   spec.name             = 'pinpress'
   spec.version          = PinPress::VERSION
