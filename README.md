@@ -28,7 +28,8 @@ Syntax and usage can be accessed by running `pinpress help`:
 ```
 $ pinpress help
 NAME
-    pinpress - A Pinboard application that allows for the creation of "pin templates" in almost any conceivable format.
+    pinpress - A Pinboard application that allows for the creation of 
+    "pin templates" in almost any conceivable format.
 
 SYNOPSIS
     pinpress [global options] command [command options] [arguments...]
