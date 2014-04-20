@@ -5,3 +5,4 @@ pkg
 bin
 .tmp
 results.html
+Gemfile.lock Gemfile.lock
