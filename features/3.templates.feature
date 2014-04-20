@@ -15,17 +15,8 @@ Feature: Templates
       api_token: bachya:12345
     pin_templates:
     - name: pinpress_default
-      opener: |
-        <ul>
-      item: |
-        <li>
-        <b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
-        <%= extended %>
-        </li>
-      closer: "</ul>"
     tag_templates:
     - name: pinpress_default
-      item: "<%= tag %> (<%= count %>),"
     """
     When I run `pinpress templates` interactively
     Then the exit status should be 0
@@ -50,17 +41,8 @@ Feature: Templates
       api_token: bachya:12345
     pin_templates:
     - name: pinpress_default
-      opener: |
-        <ul>
-      item: |
-        <li>
-        <b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
-        <%= extended %>
-        </li>
-      closer: "</ul>"
     tag_templates:
     - name: pinpress_default
-      item: "<%= tag %> (<%= count %>),"
     """
     When I run `pinpress templates list` interactively
     Then the exit status should be 0
