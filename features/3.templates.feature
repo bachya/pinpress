@@ -11,7 +11,7 @@ Feature: Templates
       default_pin_template: pinpress_default
       default_tag_template: pinpress_default
       log_level: WARN
-      version: 1.1.0
+      version: 1.1.1
       api_token: bachya:12345
     pin_templates:
     - name: pinpress_default
@@ -46,7 +46,7 @@ Feature: Templates
       default_pin_template: pinpress_default
       default_tag_template: pinpress_default
       log_level: WARN
-      version: 1.1.0
+      version: 1.1.1
       api_token: bachya:12345
     pin_templates:
     - name: pinpress_default

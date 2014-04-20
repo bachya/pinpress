@@ -17,7 +17,7 @@ Feature: Initialization
         default_pin_template: pinpress_default
         default_tag_template: pinpress_default
         log_level: WARN
-        version: 1.1.0
+        version: 1.1.1
         api_token: bachya:12345
       pin_templates:
       - name: pinpress_default
@@ -33,7 +33,7 @@ Feature: Initialization
       - name: pinpress_default
         item: "<%= tag %> (<%= count %>),"
       """
-
+  
   Scenario: Reinitialization (refuse)
     Given a file located at "/tmp/pp/.pinpress" with the contents:
     """
@@ -43,7 +43,7 @@ Feature: Initialization
       default_pin_template: pinpress_default
       default_tag_template: pinpress_default
       log_level: WARN
-      version: 1.1.0
+      version: 1.1.1
       api_token: bachya:12345
     pin_templates:
     - name: pinpress_default
@@ -72,7 +72,7 @@ Feature: Initialization
       default_pin_template: pinpress_default
       default_tag_template: pinpress_default
       log_level: WARN
-      version: 1.1.0
+      version: 1.1.1
       api_token: bachya:12345
     pin_templates:
     - name: pinpress_default
@@ -101,7 +101,7 @@ Feature: Initialization
         default_pin_template: pinpress_default
         default_tag_template: pinpress_default
         log_level: WARN
-        version: 1.1.0
+        version: 1.1.1
         api_token: bachya:12345
       pin_templates:
       - name: pinpress_default
@@ -127,7 +127,7 @@ Feature: Initialization
       default_pin_template: pinpress_default
       default_tag_template: pinpress_default
       log_level: WARN
-      version: 1.1.0
+      version: 1.1.1
       api_token: bachya:12345
     pin_templates:
     - name: pinpress_default
@@ -155,7 +155,7 @@ Feature: Initialization
         default_pin_template: pinpress_default
         default_tag_template: pinpress_default
         log_level: WARN
-        version: 1.1.0
+        version: 1.1.1
         api_token: bachya:12345
       pin_templates:
       - name: pinpress_default

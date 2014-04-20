@@ -1,4 +1,3 @@
-@announce
 Feature: UI
   As a user, when I ask for help, I should be presented
   with instructions on how to run the app.
