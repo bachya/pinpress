@@ -1,6 +1,6 @@
 PinPress
 ========
-[![Build Status](https://travis-ci.org/bachya/PinPress.svg?branch=master)](https://travis-ci.org/bachya/PinPress)
+[![Build Status](https://travis-ci.org/bachya/pinpress.svg?branch=master)](https://travis-ci.org/bachya/pinpress)
 [![Gem Version](https://badge.fury.io/rb/pinpress.svg)](http://badge.fury.io/rb/pinpress)
 
 PinPress is a simple CLI to create templates (HTML, Markdown, or otherwise) of Pinboard pins and tags.
