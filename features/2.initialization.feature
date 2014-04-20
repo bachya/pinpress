@@ -19,19 +19,6 @@ Feature: Initialization
         log_level: WARN
         version: 1.1.1
         api_token: bachya:12345
-      pin_templates:
-      - name: pinpress_default
-        opener: |
-          <ul>
-        item: |
-          <li>
-          <b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
-          <%= extended %>
-          </li>
-        closer: "</ul>"
-      tag_templates:
-      - name: pinpress_default
-        item: "<%= tag %> (<%= count %>),"
       """
   
   Scenario: Reinitialization (refuse)
@@ -45,19 +32,6 @@ Feature: Initialization
       log_level: WARN
       version: 1.1.1
       api_token: bachya:12345
-    pin_templates:
-    - name: pinpress_default
-      opener: |
-        <ul>
-      item: |
-        <li>
-        <b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
-        <%= extended %>
-        </li>
-      closer: "</ul>"
-    tag_templates:
-    - name: pinpress_default
-      item: "<%= tag %> (<%= count %>),"
     """
     When I run `pinpress init` interactively
       And I type ""
@@ -74,19 +48,6 @@ Feature: Initialization
       log_level: WARN
       version: 1.1.1
       api_token: bachya:12345
-    pin_templates:
-    - name: pinpress_default
-      opener: |
-        <ul>
-      item: |
-        <li>
-        <b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
-        <%= extended %>
-        </li>
-      closer: "</ul>"
-    tag_templates:
-    - name: pinpress_default
-      item: "<%= tag %> (<%= count %>),"
     """
     When I run `pinpress init` interactively
       And I type "y"
@@ -103,19 +64,6 @@ Feature: Initialization
         log_level: WARN
         version: 1.1.1
         api_token: bachya:12345
-      pin_templates:
-      - name: pinpress_default
-        opener: |
-          <ul>
-        item: |
-          <li>
-          <b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
-          <%= extended %>
-          </li>
-        closer: "</ul>"
-      tag_templates:
-      - name: pinpress_default
-        item: "<%= tag %> (<%= count %>),"
       """
         
   Scenario: Reinitialization (from scratch)
@@ -129,19 +77,6 @@ Feature: Initialization
       log_level: WARN
       version: 1.1.1
       api_token: bachya:12345
-    pin_templates:
-    - name: pinpress_default
-      opener: |
-        <ul>
-      item: |
-        <li>
-        <b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
-        <%= extended %>
-        </li>
-      closer: "</ul>"
-    tag_templates:
-    - name: pinpress_default
-      item: "<%= tag %> (<%= count %>),"
     """
     When I run `pinpress init -s` interactively
       And I type ""
@@ -157,17 +92,4 @@ Feature: Initialization
         log_level: WARN
         version: 1.1.1
         api_token: bachya:12345
-      pin_templates:
-      - name: pinpress_default
-        opener: |
-          <ul>
-        item: |
-          <li>
-          <b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
-          <%= extended %>
-          </li>
-        closer: "</ul>"
-      tag_templates:
-      - name: pinpress_default
-        item: "<%= tag %> (<%= count %>),"
       """

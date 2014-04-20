@@ -62,13 +62,18 @@ module PinPress
       configuration.add_section(:pin_templates)
       configuration.add_section(:tag_templates)
 
+      configuration.pinpress.merge!(
+        config_location: configuration.config_path,
+        default_pin_template: 'pinpress_default',
+        default_tag_template: 'pinpress_default',
+        log_level: 'WARN',
+        version: PinPress::VERSION
+      )
+
       default_pin_template = {
         name: 'pinpress_default',
-        opener: "<ul>\n",
-        item: %q(<li>
-<b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b>
-<%= extended %>
-</li>) + "\n",
+        opener: '<ul>',
+        item: '<li><b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b><%= extended %></li>',
         closer: '</ul>'
       }
 
@@ -79,14 +84,6 @@ module PinPress
 
       configuration.data['pin_templates'] = [default_pin_template]
       configuration.data['tag_templates'] = [default_tag_template]
-
-      configuration.pinpress.merge!(
-        config_location: configuration.config_path,
-        default_pin_template: 'pinpress_default',
-        default_tag_template: 'pinpress_default',
-        log_level: 'WARN',
-        version: PinPress::VERSION
-      )
     end
 
     pm = CLIUtils::Prefs.new(PinPress::PREF_FILES['INIT'], configuration)
