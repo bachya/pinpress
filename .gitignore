@@ -2,7 +2,6 @@
 doc
 pkg
 .yardoc
-bin
 .tmp
 results.html
 Gemfile.lock Gemfile.lock
