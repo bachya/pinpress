@@ -1,5 +1,6 @@
 PinPress
 ========
+[![Build Status](https://travis-ci.org/bachya/pinpress.svg?branch=master)](https://travis-ci.org/bachya/pinpress)
 [![Gem Version](https://badge.fury.io/rb/pinpress.svg)](http://badge.fury.io/rb/pinpress)
 
 PinPress is a simple CLI to create templates (HTML, Markdown, or otherwise) of Pinboard pins and tags.
@@ -27,7 +28,7 @@ Syntax and usage can be accessed by running `pinpress help`:
 ```
 $ pinpress help
 NAME
-    pinpress - A Pinboard application that allows for the creation of 
+    pinpress - A Pinboard application that allows for the creation of
     "pin templates" in almost any conceivable format.
 
 SYNOPSIS
@@ -75,7 +76,7 @@ Initialization will prompt you to enter your Pinboard API token. Once, entered, 
 
 # Templates
 
-The first stop on the PinPress journey is templates. Templates are used to define how data should be output and are defined in `~/.pinpress`. They come in two forms: **Pin Templates** and **Tag Templates**. 
+The first stop on the PinPress journey is templates. Templates are used to define how data should be output and are defined in `~/.pinpress`. They come in two forms: **Pin Templates** and **Tag Templates**.
 
 ## Pin Templates
 
