@@ -389,7 +389,7 @@ Bugs, issues, and enhancement requests can be submitted on the [Issues Page](htt
 
 # Bugs and Feature Requests
 
-To report bugs with or suggest features/changes for Sifttter Redux, please use the [Issues Page](http://github.com/bachya/PinPress/issues).
+To report bugs with or suggest features/changes for PinPress, please use the [Issues Page](http://github.com/bachya/PinPress/issues).
 
 Contributions are welcome and encouraged. To contribute:
 
