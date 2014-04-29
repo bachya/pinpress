@@ -128,7 +128,7 @@ Pinpress can also work with tags in a Pinboard account:
 $ pinpress tags
 ```
 
-This simple command will return all tags from the user's account and output them based on the [Tag Template](https://github.com/bachya/PinPress#tag-templates "Tag Templates") provided.
+This simple command will return all tags from the user's account and output them based on the [Tag Template](#tag-templates "Tag Templates") provided.
 
 Pinpress also provides some flags that allow a user to define specific tags to grab:
 
