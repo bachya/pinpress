@@ -188,6 +188,7 @@ end
 desc 'Get tags from Pinboard'
 command :tags do |c|
   c.flag([:e], desc: 'The end date to pull pins to')
+  c.flag([:t], desc: 'The tags to use (e.g., "ruby,pinboard")')
   c.flag([:s], desc: 'The start date to pull pins from')
 
   c.desc 'Gets the unique tags based on the passed criteria'
@@ -201,6 +202,12 @@ command :tags do |c|
       opts.merge!(todt: Chronic.parse(options[:e])) if options[:e]
       opts.merge!(fromdt: Chronic.parse(options[:s])) if options[:s]
 
+      if options[:t]
+        opts.merge!(tag: options[:t])
+      elsif configuration.pinpress[:default_tags]
+        opts.merge!(tag: configuration.pinpress[:default_tags])
+      end
+
       begin
         pins = client.posts(opts)
         pins.each { |p| tags += p[:tag] }
@@ -209,8 +216,10 @@ command :tags do |c|
         if !tags.empty?
           print template.opener if template.opener
           tags.each do |t|
-            tag   = t[:tag]
-            count = t[:count]
+            unless t[:tag] == opts[:tag]
+              tag   = t[:tag]
+              count = t[:count]
+            end
 
             print ERB.new(template.item).result(binding) if template.item
           end
