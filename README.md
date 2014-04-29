@@ -184,7 +184,7 @@ pin_templates:
   opener: "<ul>\n"
   item: >
     <li>
-    <b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\">
+    <b><a title="<%= description %>" href="<%= href %>" target="_blank">
     <%= description %></a>.</b>
     <%= extended %>
     </li>
@@ -231,7 +231,7 @@ pin_templates:
 - name: pinpress_default
   opener: "<ul>\n"
   closer: "</ul>"
-  item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
+  item: "<li><b><a title="<%= description %>" href="<%= href %>" target="_blank"><%=
     description %></a>.</b> <%= extended %></li>\N"
 ```
 
