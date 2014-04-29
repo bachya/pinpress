@@ -251,7 +251,7 @@ tag_templates:
   item: "<%= tag %> (<%= count %>),"
 ```
 
-A Pin Template can have several different sub-keys:
+A Tag Template makes use of the same sub-keys as Pin Template:
 
 * `name` (**required**): the name of the template
 * `opener` (*optional*): the text that should exist above the tag string
@@ -334,8 +334,8 @@ pinpress:
 
 Do note:
 
-* The `default_tags` key can be overridden by the `-t` flag.
-* The `default_num_results` key can be overridden by the `-n` flag.
+* The `default_tags` key is overridden by the `-t` flag.
+* The `default_num_results` key is overridden by the `-n` flag.
 
 # Link Mash Config File
 
