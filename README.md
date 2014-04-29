@@ -313,11 +313,16 @@ You can place special keys in the `pinpress` section of `~/.pinpress` to automat
 ```YAML
 pinpress:
   # ...other keys...
-  default_pin_template                  # The default `pins` template to use
-  default_tag_template                  # The default `tags` template to use
-  default_tags: ['tag1', 'tag2']        # The default tags to be used when getting pins or associated tags
-  ignored_tags: ['bad-tag', 'bad-tag2'] # The tags to ignore when executing either `pins` or `tags`
-  default_num_results: 5                # The default number of results to return
+  # The default `pins` template to use
+  default_pin_template
+  # The default `tags` template to use
+  default_tag_template
+  # The default tags to be used when getting pins or associated tags
+  default_tags: ['tag1', 'tag2']
+  # The tags to ignore when executing either `pins` or `tags`
+  ignored_tags: ['bad-tag', 'bad-tag2']
+  # The default number of results to return
+  default_num_results: 5
   # ...other keys...
 ```
 
