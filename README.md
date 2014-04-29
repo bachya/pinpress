@@ -222,7 +222,7 @@ Pinpress also provides some flags that allow a user to define specific pins to g
 * `-s`: the start date to use (uses [Chronic](https://github.com/mojombo/chronic "Chronic"), which allows dates like "last Tuesday")
 * `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
 * `-n`: the number of pins to return (e.g., 20)
-* `-t`: a CSV list of tags to grab (e.g., "tag1,tag2")
+* `-t`: a CSV list of tags (e.g., "tag1,tag2") that must exist for the returned pins
 
 Naturally, these switches can be combined in any number of ways.
 
@@ -271,7 +271,7 @@ Pinpress also provides some flags that allow a user to define specific tags to g
 
 * `-s`: the start date to use (uses [Chronic](https://github.com/mojombo/chronic "Chronic"), which allows dates like "last Tuesday")
 * `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
-* `-t`: a CSV list of tags (e.g., "tag1,tag2") to examine for association (see)
+* `-t`: a CSV list of tags (e.g., "tag1,tag2") to examine for association (see [below](#getting-tags-that-have-been-used-with-other-tags)).
 
 ## Getting Tags From a Date Forward
 
@@ -307,7 +307,7 @@ $ pinpress tags -t 'tag1,tag2' -s 2014-01-01
 
 In addition to `default_pin_template` and `default_tag_template`, you can place some other special keys in the `pinpress` section of `~/.pinpress`:
 
-* `default_tags`: the default tags to be used when getting pins (e.g., `'ruby,pinboard'`). This can be overridden by using the `-t` flag.
+* `default_tags`: the default tags (e.g., `'ruby,pinboard'`) to be used when getting pins or associated tags. This can be overridden by using the `-t` flag.
 * `default_num_results`: the default number of results to return (e.g., '5'). This can be overridden by using the `-n` flag.
 
 # Known Issues & Future Releases
