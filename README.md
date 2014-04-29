@@ -263,7 +263,7 @@ A Pin Template can have several different sub-keys:
 Additionally, like a Pin Template, a Tag Template can make use of a few tokens:
 
 * `<%= tag %>`: the name of the tag
-* `<%= count %>`: the number of times the tag has been used in the range
+* `<%= count %>`: the number of times the tag has been used (depending on the range used)
 
 ### Usage
 
@@ -351,7 +351,7 @@ pinpress:
   ignored_tags: ['buffer']
   log_level: WARN
   version: 1.1.1
-  api_token: bachya:1234567890
+  api_token: bachya:b819312cf9ccee799b87
 pin_templates:
 - name: pinpress_default
   opener: >
@@ -366,8 +366,8 @@ pin_templates:
   item: >
     <li>
     <b><a title="<%= description %>" href="<%= href %>" target="_blank">
-    <%= description %>
-    </a>.</b> <%= extended %>
+    <%= description %></a>.</b>
+    <%= extended %>
     </li>
   closer: >
     </ul>
