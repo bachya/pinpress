@@ -118,6 +118,8 @@ $ pinpress pins -t "ruby,cli"
 
 ...returns all pins tagged "ruby" *and* "cli".
 
+**Naturally, these switches can be combined in any number of ways.**
+
 # Getting Tags
 
 Pinpress can also work with tags in a Pinboard account:
@@ -125,8 +127,6 @@ Pinpress can also work with tags in a Pinboard account:
 ```bash
 $ pinpress tags
 ```
-
-Naturally, these switches can be combined in any number of ways.
 
 This simple command will return all tags from the user's account and output them based on the [Tag Template](https://github.com/bachya/PinPress#tag-templates "Tag Templates") provided.
 
