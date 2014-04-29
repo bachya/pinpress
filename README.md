@@ -77,17 +77,9 @@ Initialization will prompt you to enter your Pinboard API token. Once, entered, 
 
 ```
 $ pinpress pins
-# <ul>
-#   <li>
-#     <b><a title="Technical Debt, a case study : tags" href="http://marcgravell.blogspot.com/2014/04/technical-debt-case-study-tags.html?m=1" target="_blank">Technical Debt, a case study : tags</a>.</b> A look at how programmers solve complex problems iteratively.
-#   </li>
-#   <li>
-#     <b><a title="Using Drafts for Remote CLI" href="https://gist.github.com/hiilppp/10993803" target="_blank">Using Drafts for Remote CLI</a>.</b> As a text file is added to a directory to which this AppleScript is associated as Folder Action, the content of the received file is executed as shell script and the generated output sent to an iOS device.
-#   </li>
-# </ul>
 ```
 
-This simple command will return all pins from the user's account and output them based on the [Pin Template](https://github.com/bachya/PinPress#pin-templates "Pin Templates") provided.
+This simple command will return all pins from the user's account and output them based on the [Pin Template](#pin-templates "Pin Templates") provided.
 
 Pinpress also provides some flags that allow a user to define specific pins to grab:
 
