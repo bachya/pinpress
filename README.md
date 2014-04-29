@@ -254,13 +254,13 @@ tag_templates:
 A Pin Template can have several different sub-keys:
 
 * `name` (**required**): the name of the template
-* `opener` (*optional*): the text that should exist above the tags
-* `closer` (*optional*): the text that should exist below the tags
-* `item` (**required**): the formatted text that should be output for every pin
+* `opener` (*optional*): the text that should exist above the tag string
+* `closer` (*optional*): the text that should exist below the tag string
+* `item` (**required**): the formatted text that should be output for every tag
 
 ### Available Tokens
 
-Additionally, a Pin Template can make use of several different tokens that are filled by a pin's values:
+Additionally, like a Pin Template, a Tag Template can make use of a few tokens:
 
 * `<%= tag %>`: the name of the tag
 * `<%= count %>`: the number of times the tag has been used in the range
