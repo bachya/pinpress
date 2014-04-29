@@ -6,7 +6,7 @@ PinPress is a simple CLI to create templates (HTML, Markdown, or otherwise) of P
 
 # Why?
 
-Every two weeks, I create a "link mash" for my website; this link mash consists of URLs that I find interesting and want to share with my readers. Previously, I would save those interesting URLs to an Evernote note and, every two weeks, manually create my link mash for use in Wordpress. <barf/>
+Every week, I create a [link mash for my blog](#link-mash-config-file); this link mash consists of URLs that I find interesting and want to share with my readers. Previously, I would save those interesting URLs to an Evernote note and, every two weeks, manually create my link mash for use in Wordpress. <barf/>
 
 When I began using [Pinboard](http://pinboard.in "Pinboard") to save interesting links, I knew I needed a better method. This tool is the result: **Pin** board + Word **press**.
 
