@@ -245,7 +245,7 @@ Tag Templates are exactly like Pin Templates, but are used for tags.
 
 They, too, are defined in `~/.pinpress`:
 
-```YAML
+```yaml
 tag_templates:
 - name: pinpress_default
   item: "<%= tag %> (<%= count %>),"
@@ -275,7 +275,7 @@ $ pinpress tags template_name
 
 ...or a default template can be specified in `~/.pinpress`:
 
-```
+```yaml
 ---
 pinpress:
   config_location: "/Users/abach/.pinpress"
@@ -290,13 +290,13 @@ tag_templates:
 
 So, knowing the above, both:
 
-```
+```bash
 $ pinpress tags
 ```
 
 ...and:
 
-```
+```bash
 $ pinpress tags pinpress_default
 ```
 
@@ -310,7 +310,7 @@ link-mash (15),app (2),ios (3),productivity (1),launch-center-pro (1),drafts (2)
 
 You can place special keys in the `pinpress` section of `~/.pinpress` to automate some actions:
 
-```YAML
+```yaml
 pinpress:
   # ...other keys...
 
