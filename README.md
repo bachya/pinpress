@@ -34,7 +34,7 @@ SYNOPSIS
     pinpress [global options] command [command options] [arguments...]
 
 VERSION
-    1.1.2
+    1.2.0
 
 GLOBAL OPTIONS
     --help    - Show this message
@@ -305,10 +305,23 @@ $ pinpress tags -t 'tag1,tag2' -s 2014-01-01
 
 # Other Configuration Options
 
-In addition to `default_pin_template` and `default_tag_template`, you can place some other special keys in the `pinpress` section of `~/.pinpress`:
+You can place special keys in the `pinpress` section of `~/.pinpress` to automate some actions:
 
-* `default_tags`: the default tags (e.g., `'ruby,pinboard'`) to be used when getting pins or associated tags. This can be overridden by using the `-t` flag.
-* `default_num_results`: the default number of results to return (e.g., '5'). This can be overridden by using the `-n` flag.
+```YAML
+pinpress:
+  # ...other keys...
+  default_pin_template                  # The default `pins` template to use
+  default_tag_template                  # The default `tags` template to use
+  default_tags: ['tag1', 'tag2']        # The default tags to be used when getting pins or associated tags
+  ignored_tags: ['bad-tag', 'bad-tag2'] # The tags to ignore when executing either `pins` or `tags`
+  default_num_results: 5                # The default number of results to return
+  # ...other keys...
+```
+
+Do note:
+
+* The `default_tags` key can be overridden by the `-t` flag.
+* The `default_num_results` key can be overridden by the `-n` flag.
 
 # Known Issues & Future Releases
 

@@ -146,10 +146,14 @@ command :pins do |c|
       end
 
       if options[:t]
-        opts.merge!(tag: options[:t])
+        tags = options[:t].split(',')
       elsif configuration.pinpress[:default_tags]
-        opts.merge!(tag: configuration.pinpress[:default_tags])
+        tags = configuration.pinpress[:default_tags]
       end
+
+      ignored_tags = configuration.pinpress[:ignored_tags]
+      tags -= ignored_tags if ignored_tags
+      opts.merge!(tag: tags) if tags
 
       begin
         pins = client.posts(opts)
@@ -203,10 +207,14 @@ command :tags do |c|
       opts.merge!(fromdt: Chronic.parse(options[:s])) if options[:s]
 
       if options[:t]
-        opts.merge!(tag: options[:t])
+        tags = options[:t].split(',')
       elsif configuration.pinpress[:default_tags]
-        opts.merge!(tag: configuration.pinpress[:default_tags])
+        tags = configuration.pinpress[:default_tags]
       end
+
+      ignored_tags = configuration.pinpress[:ignored_tags]
+      tags -= ignored_tags if ignored_tags
+      opts.merge!(tag: tags) if tags
 
       begin
         pins = client.posts(opts)

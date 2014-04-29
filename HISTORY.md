@@ -1,3 +1,12 @@
+# 1.2.0 (2014-04-29)
+
+* Added `ignored_tags` configuration key
+* Several bugfixes
+
+# 1.1.2 (2014-04-29)
+
+* Added the `-t` flag to the `tags` command
+
 # 1.1.1 (2014-04-19)
 
 * Small bugfixes
