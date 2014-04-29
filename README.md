@@ -181,7 +181,7 @@ Pin Templates are placed under the `pin_templates` section of the `~/.pinpress` 
 ```yaml
 pin_templates:
 - name: pinpress_default
-  opener: "<ul\n"
+  opener: "<ul>\n"
   item: >
     <li>
     <b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\">
