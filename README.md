@@ -182,9 +182,13 @@ Pin Templates are placed under the `pin_templates` section of the `~/.pinpress` 
 pin_templates:
 - name: pinpress_default
   opener: "<ul\n"
+  item: >
+    <li>
+    <b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\">
+    <%= description %></a>.</b>
+    <%= extended %>
+    </li>
   closer: "</ul>"
-  item: "<li><b><a title=\"<%= description %>\" href=\"<%= href %>\" target=\"_blank\"><%=
-    description %></a>.</b> <%= extended %></li>\n"
 ```
 
 A Pin Template can have several different sub-keys:
