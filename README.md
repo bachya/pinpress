@@ -118,7 +118,7 @@ $ pinpress pins -t "ruby,cli"
 
 ...returns all pins tagged "ruby" *and* "cli".
 
-**Naturally, these switches can be combined in any number of ways.**
+**Naturally, these flags can be combined in any number of ways.**
 
 # Getting Tags
 
