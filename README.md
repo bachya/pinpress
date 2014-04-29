@@ -393,7 +393,7 @@ To report bugs with or suggest features/changes for Sifttter Redux, please use t
 
 Contributions are welcome and encouraged. To contribute:
 
-* [Fork Sifttter Redux](http://github.com/bachya/PinPress/fork).
+* [Fork PinPress](http://github.com/bachya/PinPress/fork).
 * Create a branch for your contribution (`git checkout -b new-feature`).
 * Commit your changes (`git commit -am 'Added this new feature'`).
 * Push to the branch (`git push origin new-feature`).
