@@ -300,10 +300,10 @@ $ pinpress tags
 $ pinpress tags pinpress_default
 ```
 
-...will output the same data in the format specified by that template:
+...will output tag data in the format specified by that template:
 
 ```
-link-mash (15),app (2),ios (3),productivity (1),launch-center-pro (1),drafts (2),buffer (8),osx (5),homebrew (1),hazel (1),dropbox (1),video (1),blown-mind (2),reading (5),programming (4),api (1),art-design (1),security (1),applescript (1),career (1),instagram (1),github (1),
+link-mash (15),app (2),ios (3),productivity (1),launch-center-pro (1),drafts (2),
 ```
 
 # Other Configuration Options
