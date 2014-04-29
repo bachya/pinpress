@@ -126,7 +126,6 @@ Pinpress can also work with tags in a Pinboard account:
 
 ```
 $ pinpress tags
-# => cli (1),github (1),applescript (1),osx (1),link-mash (1),
 ```
 
 This simple command will return all tags from the user's account and output them based on the [Tag Template](https://github.com/bachya/PinPress#tag-templates "Tag Templates") provided.
@@ -289,10 +288,22 @@ tag_templates:
   item: "<%= tag %> (<%= count %>),"
 ```
 
-Again, the default template will be used when the `tags` command is run without any arguments:
+So, knowing the above, both:
 
 ```
 $ pinpress tags
+```
+
+...and:
+
+```
+$ pinpress tags pinpress_default
+```
+
+...will output the same data in the format specified by that template:
+
+```
+link-mash (15),app (2),ios (3),productivity (1),launch-center-pro (1),drafts (2),buffer (8),osx (5),homebrew (1),hazel (1),dropbox (1),video (1),blown-mind (2),reading (5),programming (4),api (1),art-design (1),security (1),applescript (1),career (1),instagram (1),github (1),
 ```
 
 # Other Configuration Options
@@ -315,7 +326,7 @@ Do note:
 * The `default_tags` key can be overridden by the `-t` flag.
 * The `default_num_results` key can be overridden by the `-n` flag.
 
-# Bachya Productions Link Mash Config File
+# Link Mash Config File
 
 For your reference, here's my `~/.pinpress` (which is used to generate a [Link Mash on my blog](http://www.bachyaproductions.com/tag/link-mash/ "Bachya Productions Link Mash Archives")):
 
