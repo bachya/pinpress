@@ -88,8 +88,6 @@ Pinpress also provides some flags that allow a user to define specific pins to g
 * `-n`: the number of pins to return (e.g., 20)
 * `-t`: a CSV list of tags (e.g., "tag1,tag2") that must exist for the returned pins
 
-Naturally, these switches can be combined in any number of ways.
-
 ## Getting Pins From a Date Forward
 
 ```bash
@@ -127,6 +125,8 @@ Pinpress can also work with tags in a Pinboard account:
 ```bash
 $ pinpress tags
 ```
+
+Naturally, these switches can be combined in any number of ways.
 
 This simple command will return all tags from the user's account and output them based on the [Tag Template](https://github.com/bachya/PinPress#tag-templates "Tag Templates") provided.
 
