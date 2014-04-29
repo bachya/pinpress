@@ -4,4 +4,6 @@ pkg
 .yardoc
 .tmp
 results.html
-Gemfile.lock Gemfile.lock
+Gemfile.lock
+.simplecov
+coverage

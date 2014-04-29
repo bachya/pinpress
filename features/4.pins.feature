@@ -1,7 +1,8 @@
+@active
 Feature: Templates
   As a user, I should be able get pins from Pinboard
   and have them inherit certain templates.
-  
+
   Scenario: Invalid API Key
     Given a file located at "/tmp/pp/.pinpress" with the contents:
     """

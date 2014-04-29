@@ -1,7 +1,8 @@
+@active
 Feature: Templates
   As a user, I should be able to list available
   templates and choose one.
-  
+
   Scenario: List Templates (implicit)
     Given a file located at "/tmp/pp/.pinpress" with the contents:
     """
@@ -27,7 +28,7 @@ Feature: Templates
     ---> AVAILABLE TAG TEMPLATES:
     # 1. pinpress_default
     """
-    
+
   Scenario: List Templates (explicit)
     Given a file located at "/tmp/pp/.pinpress" with the contents:
     """

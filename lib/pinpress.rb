@@ -16,6 +16,12 @@ module PinPress
     attr_accessor :verbose
   end
 
+  # Establishes the template to use and yields a block with that
+  # template an a Pinboard client.
+  # @param [Fixnum] template_type Either a Pin or Tag template
+  # @param [String] template_name The neame of the template to use
+  # @yield
+  # @return [void]
   def self.execute_template(template_type, template_name)
     template_hash = PinPress.get_template_by_name(template_type, template_name)
     if !template_hash.nil?

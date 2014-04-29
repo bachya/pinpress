@@ -32,7 +32,7 @@ module PinPress
 
     # Initializes this class by ingesting
     # passed parameters.
-    # @param [Hash]
+    # @param [Hash] params
     # @return [void]
     def initialize(params = {})
       params.each { |key, value| send("#{ key }=", value) }
