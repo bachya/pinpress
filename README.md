@@ -16,7 +16,7 @@ In addition to Git (which, given you being on this site, I'll assume you have), 
 
 # Installation
 
-```
+```bash
 gem install pinpress
 ```
 
@@ -24,7 +24,7 @@ gem install pinpress
 
 Syntax and usage can be accessed by running `pinpress help`:
 
-```
+```bash
 $ pinpress help
 NAME
     pinpress - A Pinboard application that allows for the creation of
@@ -50,7 +50,7 @@ COMMANDS
 
 Note that each command's options can be revealed by adding the `--help` switch after the command. For example:
 
-```
+```bash
 $ pinpress pins --help
 NAME
     pins - Get posts from Pinboard
@@ -67,7 +67,7 @@ COMMAND OPTIONS
 
 # Initialization
 
-```
+```bash
 $ pinpress init
 ```
 
@@ -75,7 +75,7 @@ Initialization will prompt you to enter your Pinboard API token. Once, entered, 
 
 # Getting Pins
 
-```
+```bash
 $ pinpress pins
 ```
 
@@ -92,7 +92,7 @@ Naturally, these switches can be combined in any number of ways.
 
 ## Getting Pins From a Date Forward
 
-```
+```bash
 $ pinpress pins -s 2014-01-01
 ```
 
@@ -100,7 +100,7 @@ $ pinpress pins -s 2014-01-01
 
 ## Getting Pins Until a Date
 
-```
+```bash
 $ pinpress pins -e 2014-01-01
 ```
 
@@ -108,13 +108,13 @@ $ pinpress pins -e 2014-01-01
 
 ## Getting Pins Between a Date Range
 
-```
+```bash
 $ pinpress pins -s 2014-01-01 -e 2014-01-31
 ```
 
 ## Getting Tagged Pins
 
-```
+```bash
 $ pinpress pins -t "ruby,cli"
 ```
 
@@ -124,7 +124,7 @@ $ pinpress pins -t "ruby,cli"
 
 Pinpress can also work with tags in a Pinboard account:
 
-```
+```bash
 $ pinpress tags
 ```
 
@@ -138,7 +138,7 @@ Pinpress also provides some flags that allow a user to define specific tags to g
 
 ## Getting Tags From a Date Forward
 
-```
+```bash
 $ pinpress tags -s 2014-01-01
 ```
 
@@ -146,7 +146,7 @@ $ pinpress tags -s 2014-01-01
 
 ## Getting Tags Until a Date
 
-```
+```bash
 $ pinpress tags -e 2014-01-01
 ```
 
@@ -154,13 +154,13 @@ $ pinpress tags -e 2014-01-01
 
 ## Getting Tags Between a Date Range
 
-```
+```bash
 $ pinpress tags -s 2014-01-01 -e 2014-01-31
 ```
 
 ## Getting Tags that Have Been Used With Other Tags
 
-```
+```bash
 $ pinpress tags -t 'tag1,tag2' -s 2014-01-01
 ```
 
@@ -178,7 +178,7 @@ Pin Templates define how a pin from Pinboard should be output.
 
 Pin Templates are placed under the `pin_templates` section of the `~/.pinpress` config file -- as an example:
 
-```YAML
+```yaml
 pin_templates:
 - name: pinpress_default
   opener: "<ul\n"
@@ -211,13 +211,13 @@ Additionally, a Pin Template can make use of several different tokens that are f
 
 Pin Templates can be used in two ways: they can either be called dynamically:
 
-```
+```bash
 $ pinpress pins template_name
 ```
 
 ...or a default template can be specified in `~/.pinpress`:
 
-```
+```yaml
 ---
 pinpress:
   config_location: "/Users/abach/.pinpress"
@@ -233,7 +233,7 @@ pin_templates:
 
 The default template will be used when the `pins` command is run without any arguments:
 
-```
+```bash
 $ pinpress pins
 ```
 
@@ -269,7 +269,7 @@ Additionally, like a Pin Template, a Tag Template can make use of a few tokens:
 
 Pin Templates can be used in two ways: they can either be called dynamically:
 
-```
+```bash
 $ pinpress tags template_name
 ```
 
@@ -302,7 +302,7 @@ $ pinpress tags pinpress_default
 
 ...will output tag data in the format specified by that template:
 
-```
+```bash
 link-mash (15),app (2),ios (3),productivity (1),launch-center-pro (1),drafts (2),
 ```
 
@@ -341,7 +341,7 @@ Do note:
 
 For your reference, here's my `~/.pinpress` (which is used to generate a [Link Mash on my blog](http://www.bachyaproductions.com/tag/link-mash/ "Bachya Productions Link Mash Archives")):
 
-```YAML
+```yaml
 ---
 pinpress:
   config_location: "/Users/abach/.pinpress"
