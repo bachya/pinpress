@@ -256,13 +256,18 @@ $ pinpress pins pinpress_default
 ```html
 <ul>
   <li>
-    <b><a href="http://www.macstories.net/tutorials/launch-center-pro-guide/">Automating iOS:
-      A Comprehensive Guide to Launch Center Pro</a>.</b>
-      This the most amazing article I've seen in a long time. So many tips, tricks,
-      and automations to make productivity easier.
+    <b>
+      <a href="http://www.macstories.net/tutorials/launch-center-pro-guide/">
+        Automating iOS: A Comprehensive Guide to Launch Center Pro
+      </a>.
+    </b>
+    This the most amazing article I've seen in a long time. So many tips, tricks,
+    and automations to make productivity easier.
   </li>
 </ul>
 ```
+
+(Note that the nice indenting is for Github's sake; the actual output will conform to the formatting in `~/.pinpress`.)
 
 ## Tag Templates
 
