@@ -73,6 +73,108 @@ $ pinpress init
 
 Initialization will prompt you to enter your Pinboard API token. Once, entered, this (and other pertinent data) will be stored in `~/.pinpress`.
 
+# Getting Pins
+
+```
+$ pinpress pins
+# <ul>
+#   <li>
+#     <b><a title="Technical Debt, a case study : tags" href="http://marcgravell.blogspot.com/2014/04/technical-debt-case-study-tags.html?m=1" target="_blank">Technical Debt, a case study : tags</a>.</b> A look at how programmers solve complex problems iteratively.
+#   </li>
+#   <li>
+#     <b><a title="Using Drafts for Remote CLI" href="https://gist.github.com/hiilppp/10993803" target="_blank">Using Drafts for Remote CLI</a>.</b> As a text file is added to a directory to which this AppleScript is associated as Folder Action, the content of the received file is executed as shell script and the generated output sent to an iOS device.
+#   </li>
+# </ul>
+```
+
+This simple command will return all pins from the user's account and output them based on the [Pin Template](https://github.com/bachya/PinPress#pin-templates "Pin Templates") provided.
+
+Pinpress also provides some flags that allow a user to define specific pins to grab:
+
+* `-s`: the start date to use (uses [Chronic](https://github.com/mojombo/chronic "Chronic"), which allows dates like "last Tuesday")
+* `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
+* `-n`: the number of pins to return (e.g., 20)
+* `-t`: a CSV list of tags (e.g., "tag1,tag2") that must exist for the returned pins
+
+Naturally, these switches can be combined in any number of ways.
+
+## Getting Pins From a Date Forward
+
+```
+$ pinpress pins -s 2014-01-01
+```
+
+...returns all pins from January 1, 2014 to the current day.
+
+## Getting Pins Until a Date
+
+```
+$ pinpress pins -e 2014-01-01
+```
+
+...returns all pins up to January 1, 2014.
+
+## Getting Pins Between a Date Range
+
+```
+$ pinpress pins -s 2014-01-01 -e 2014-01-31
+```
+
+## Getting Tagged Pins
+
+```
+$ pinpress pins -t "ruby,cli"
+```
+
+...returns all pins tagged "ruby" *and* "cli".
+
+# Getting Tags
+
+Pinpress can also work with tags in a Pinboard account:
+
+```
+$ pinpress tags
+# => cli (1),github (1),applescript (1),osx (1),link-mash (1),
+```
+
+This simple command will return all tags from the user's account and output them based on the [Tag Template](https://github.com/bachya/PinPress#tag-templates "Tag Templates") provided.
+
+Pinpress also provides some flags that allow a user to define specific tags to grab:
+
+* `-s`: the start date to use (uses [Chronic](https://github.com/mojombo/chronic "Chronic"), which allows dates like "last Tuesday")
+* `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
+* `-t`: a CSV list of tags (e.g., "tag1,tag2") to examine for association (see [below](#getting-tags-that-have-been-used-with-other-tags)).
+
+## Getting Tags From a Date Forward
+
+```
+$ pinpress tags -s 2014-01-01
+```
+
+...returns all tags used from January 1, 2014 to the current day. Note that for each tag returned, the data includes both the tag name and the number of times it was used.
+
+## Getting Tags Until a Date
+
+```
+$ pinpress tags -e 2014-01-01
+```
+
+...returns all tags used up to January 1, 2014.
+
+## Getting Tags Between a Date Range
+
+```
+$ pinpress tags -s 2014-01-01 -e 2014-01-31
+```
+
+## Getting Tags that Have Been Used With Other Tags
+
+```
+$ pinpress tags -t 'tag1,tag2' -s 2014-01-01
+```
+
+...returns all tags that have been used *alongside* `tag1` and `tag2`, starting on Jarnuary 1, 2014.
+
 # Templates
 
 The first stop on the PinPress journey is templates. Templates are used to define how data should be output and are defined in `~/.pinpress`. They come in two forms: **Pin Templates** and **Tag Templates**.
@@ -200,108 +302,6 @@ Again, the default template will be used when the `tags` command is run without 
 ```
 $ pinpress tags
 ```
-
-# Getting Pins
-
-```
-$ pinpress pins
-# <ul>
-#   <li>
-#     <b><a title="Technical Debt, a case study : tags" href="http://marcgravell.blogspot.com/2014/04/technical-debt-case-study-tags.html?m=1" target="_blank">Technical Debt, a case study : tags</a>.</b> A look at how programmers solve complex problems iteratively.
-#   </li>
-#   <li>
-#     <b><a title="Using Drafts for Remote CLI" href="https://gist.github.com/hiilppp/10993803" target="_blank">Using Drafts for Remote CLI</a>.</b> As a text file is added to a directory to which this AppleScript is associated as Folder Action, the content of the received file is executed as shell script and the generated output sent to an iOS device.
-#   </li>
-# </ul>
-```
-
-This simple command will return all pins from the user's account and output them based on the [Pin Template](https://github.com/bachya/PinPress#pin-templates "Pin Templates") provided.
-
-Pinpress also provides some flags that allow a user to define specific pins to grab:
-
-* `-s`: the start date to use (uses [Chronic](https://github.com/mojombo/chronic "Chronic"), which allows dates like "last Tuesday")
-* `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
-* `-n`: the number of pins to return (e.g., 20)
-* `-t`: a CSV list of tags (e.g., "tag1,tag2") that must exist for the returned pins
-
-Naturally, these switches can be combined in any number of ways.
-
-## Getting Pins From a Date Forward
-
-```
-$ pinpress pins -s 2014-01-01
-```
-
-...returns all pins from January 1, 2014 to the current day.
-
-## Getting Pins Until a Date
-
-```
-$ pinpress pins -e 2014-01-01
-```
-
-...returns all pins up to January 1, 2014.
-
-## Getting Pins Between a Date Range
-
-```
-$ pinpress pins -s 2014-01-01 -e 2014-01-31
-```
-
-## Getting Tagged Pins
-
-```
-$ pinpress pins -t "ruby,cli"
-```
-
-...returns all pins tagged "ruby" *and* "cli".
-
-# Getting Tags
-
-Pinpress can also work with tags in a Pinboard account:
-
-```
-$ pinpress tags
-# => cli (1),github (1),applescript (1),osx (1),link-mash (1),
-```
-
-This simple command will return all tags from the user's account and output them based on the [Tag Template](https://github.com/bachya/PinPress#tag-templates "Tag Templates") provided.
-
-Pinpress also provides some flags that allow a user to define specific tags to grab:
-
-* `-s`: the start date to use (uses [Chronic](https://github.com/mojombo/chronic "Chronic"), which allows dates like "last Tuesday")
-* `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
-* `-t`: a CSV list of tags (e.g., "tag1,tag2") to examine for association (see [below](#getting-tags-that-have-been-used-with-other-tags)).
-
-## Getting Tags From a Date Forward
-
-```
-$ pinpress tags -s 2014-01-01
-```
-
-...returns all tags used from January 1, 2014 to the current day. Note that for each tag returned, the data includes both the tag name and the number of times it was used.
-
-## Getting Tags Until a Date
-
-```
-$ pinpress tags -e 2014-01-01
-```
-
-...returns all tags used up to January 1, 2014.
-
-## Getting Tags Between a Date Range
-
-```
-$ pinpress tags -s 2014-01-01 -e 2014-01-31
-```
-
-## Getting Tags that Have Been Used With Other Tags
-
-```
-$ pinpress tags -t 'tag1,tag2' -s 2014-01-01
-```
-
-...returns all tags that have been used *alongside* `tag1` and `tag2`, starting on Jarnuary 1, 2014.
 
 # Other Configuration Options
 
