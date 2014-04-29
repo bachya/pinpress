@@ -232,7 +232,7 @@ pin_templates:
   opener: "<ul>\n"
   item: >
     <li>
-    <b><a title="<%= description %>" href="<%= href %>" target="_blank">
+    <b><a href="<%= href %>">
     <%= description %></a>.</b>
     <%= extended %>
     </li>
@@ -256,8 +256,7 @@ $ pinpress pins pinpress_default
 ```html
 <ul>
   <li>
-    <b><a title="Automating iOS: A Comprehensive Guide to Launch Center Pro"
-      href="http://www.macstories.net/tutorials/launch-center-pro-guide/" target="_blank">Automating iOS:
+    <b><a href="http://www.macstories.net/tutorials/launch-center-pro-guide/">Automating iOS:
       A Comprehensive Guide to Launch Center Pro</a>.</b>
       This the most amazing article I've seen in a long time. So many tips, tricks,
       and automations to make productivity easier.
