@@ -116,10 +116,10 @@ module PinPress
           output += PinPress.generate_items(template_type, template, pins, opts)
           output += template.closer if template.closer
         end
+
         configuration.save
         return output
       rescue StandardError => e
-        p e.to_s
         messenger.debug(e.to_s)
         raise "Pinboard API failed; are you sure you've run " \
              " `pinpress init` (and that your API key is correct)?"
