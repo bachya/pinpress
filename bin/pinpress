@@ -85,9 +85,9 @@ post do |global, command, options, args|
 end
 
 on_error do |exception|
-  messenger.error(exception.to_s)
-  exit!(1)
-  true
+  # messenger.error(exception.to_s)
+  # exit!(1)
+  # true
 end
 
 # ======================================================
@@ -124,63 +124,21 @@ command :pins do |c|
   c.flag([:s], desc: 'The start date to pull pins from')
   c.flag([:t], desc: 'The tags to use (e.g., "ruby,pinboard")')
 
-  c.action do |global_options, options, args|
-    # Two scenarios covered here:
-    #   1. If the user passes a valid name, grab that template.
-    #   2. If no name is passed, grabbed the default template
-    # If both of these conditions fail, an error message is shown.
-    t_type = PinPress::Template::TEMPLATE_TYPE_PIN
-    t_name = args.empty? ? nil : args[0]
-
-    PinPress.execute_template(t_type, t_name) do |template, client|
-      # Create a Pinboard client and set options based on
-      # PinPress flags.
-      opts = {}
-      opts.merge!(todt: Chronic.parse(options[:e])) if options[:e]
-      opts.merge!(fromdt: Chronic.parse(options[:s])) if options[:s]
-
-      if options[:n]
-        opts.merge!(results: options[:n])
-      elsif configuration.pinpress[:default_num_results]
-        opts.merge!(results: configuration.pinpress[:default_num_results])
-      end
-
-      if options[:t]
-        tags = options[:t].split(',')
-      elsif configuration.pinpress[:default_tags]
-        tags = configuration.pinpress[:default_tags]
-      end
-
-      ignored_tags = configuration.pinpress[:ignored_tags]
-      tags -= ignored_tags if ignored_tags
-      opts.merge!(tag: tags) if tags
-
-      begin
-        pins = client.posts(opts)
-        if !pins.empty?
-          print template.opener if template.opener
-          pins.each do |p|
-            href        = p[:href]
-            description = p[:description]
-            extended    = p[:extended]
-            tag         = p[:tag]
-            time        = p[:time]
-            replace     = p[:replace]
-            shared      = p[:shared]
-            toread      = p[:toread]
-
-            print ERB.new(template.item).result(binding) if template.item
-          end
-          print template.closer if template.closer
-        else
-          messenger.warn('No matching pins...')
-        end
-      rescue StandardError => e
-        messenger.debug(e.to_s)
-        raise "Pinboard API failed; are you sure you've run " \
-             " `pinpress init` (and that your API key is correct)?"
+  c.desc 'Gets all pins from the last run date + 1'
+  c.command :last do |last|
+    last.action do |global_options, options, args|
+      last_run_date = configuration.pinpress[:last_pins_run]
+      if last_run_date
+        options[:s] = last_run_date + 1
+        puts PinPress.get_data(PinPress::Template::TEMPLATE_TYPE_PIN, args, options)
+      else
+        messenger.warn("`pinpress pins` hasn't been run before.")
       end
     end
+  end
+
+  c.action do |global_options, options, args|
+    puts PinPress.get_data(PinPress::Template::TEMPLATE_TYPE_PIN, args, options)
   end
 end
 
@@ -195,52 +153,22 @@ command :tags do |c|
   c.flag([:t], desc: 'The tags to use (e.g., "ruby,pinboard")')
   c.flag([:s], desc: 'The start date to pull pins from')
 
-  c.desc 'Gets the unique tags based on the passed criteria'
-  c.action do |global_options, options, args|
-    t_type = PinPress::Template::TEMPLATE_TYPE_TAG
-    t_name = args.empty? ? nil : args[0]
-
-    PinPress.execute_template(t_type, t_name) do |template, client|
-      tags = []
-      opts = {}
-      opts.merge!(todt: Chronic.parse(options[:e])) if options[:e]
-      opts.merge!(fromdt: Chronic.parse(options[:s])) if options[:s]
-
-      if options[:t]
-        tags = options[:t].split(',')
-      elsif configuration.pinpress[:default_tags]
-        tags = configuration.pinpress[:default_tags]
-      end
-
-      ignored_tags = configuration.pinpress[:ignored_tags]
-      tags -= ignored_tags if ignored_tags
-      opts.merge!(tag: tags) if tags
-
-      begin
-        pins = client.posts(opts)
-        pins.each { |p| tags += p[:tag] }
-        tags = tags.uniq.map { |t| { tag: t, count: tags.count(t) } }
-
-        if !tags.empty?
-          print template.opener if template.opener
-          tags.each do |t|
-            unless t[:tag] == opts[:tag]
-              tag   = t[:tag]
-              count = t[:count]
-            end
-
-            print ERB.new(template.item).result(binding) if template.item
-          end
-       print template.closer if template.closer
-        else
-          message.warn('No matching tags...')
-        end
-      rescue StandardError => e
-        messenger.debug(e.to_s)
-        raise "Pinboard API failed; are you sure you've run " \
-             " `pinpress init` (and that your API key is correct)?"
+  c.desc 'Gets all tags from the last run date + 1'
+  c.command :last do |last|
+    last.action do |global_options, options, args|
+      last_run_date = configuration.pinpress[:last_tags_run]
+      if last_run_date
+        options[:s] = last_run_date + 1
+        puts PinPress.get_data(PinPress::Template::TEMPLATE_TYPE_TAG, args, options)
+      else
+        messenger.warn("`pinpress tags` hasn't been run before.")
       end
     end
+  end
+
+  c.desc 'Gets the unique tags based on the passed criteria'
+  c.action do |global_options, options, args|
+    puts PinPress.get_data(PinPress::Template::TEMPLATE_TYPE_TAG, args, options)
   end
 end
 

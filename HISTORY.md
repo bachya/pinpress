@@ -1,3 +1,9 @@
+# 1.2.1 (2014-04-29)
+
+* Added `pinpress pins last` functionality
+* Refactored pin-getting code to common place
+* More documentation
+
 # 1.2.0 (2014-04-29)
 
 * Added `ignored_tags` configuration key

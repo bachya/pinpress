@@ -120,6 +120,16 @@ $ pinpress pins -t "ruby,cli"
 
 **Naturally, these flags can be combined in any number of ways.**
 
+## Getting Pins Created Since Last Run
+
+Every time you run `pinpress pins`, the current date is added to `~/.pinpress`. Because of this, running:
+
+```bash
+$ pinpress pins last
+```
+
+...will get all the pins created since that date (e.g., if you'd last run `pinpress pins` on 2014-01-01, this command would return all pins created from 2014-01-02 onward).
+
 # Getting Tags
 
 Pinpress can also work with tags in a Pinboard account:
@@ -165,6 +175,16 @@ $ pinpress tags -t 'tag1,tag2' -s 2014-01-01
 ```
 
 ...returns all tags that have been used *alongside* `tag1` and `tag2`, starting on Jarnuary 1, 2014.
+
+## Getting Tags Used Since Last Run
+
+Every time you run `pinpress tags`, the current date is added to `~/.pinpress`. Because of this, running:
+
+```bash
+$ pinpress tags last
+```
+
+...will get all the tags used since that date (e.g., if you'd last run `pinpress tags` on 2014-01-01, this command would return all tags used from 2014-01-02 onward).
 
 # Templates
 
