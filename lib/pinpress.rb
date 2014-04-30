@@ -173,7 +173,7 @@ module PinPress
       default_pin_template = {
         name: 'pinpress_default',
         opener: '<ul>',
-        item: '<li><b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b><%= extended %></li>',
+        item: '<li><b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b> <%= extended %></li>',
         closer: '</ul>'
       }
 

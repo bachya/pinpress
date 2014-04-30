@@ -85,9 +85,9 @@ post do |global, command, options, args|
 end
 
 on_error do |exception|
-  # messenger.error(exception.to_s)
-  # exit!(1)
-  # true
+  messenger.error(exception.to_s)
+  exit!(1)
+  true
 end
 
 # ======================================================

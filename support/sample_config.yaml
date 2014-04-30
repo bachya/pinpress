@@ -1,0 +1,15 @@
+---
+pinpress:
+  config_location: "/tmp/pp/.pinpress"
+  default_pin_template: pinpress_default
+  default_tag_template: pinpress_default
+  log_level: WARN
+  api_token: bachya:b819312cf9ccee799b87
+pin_templates:
+- name: pinpress_default
+  opener: "<ul>"
+  item: <li><b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b> <%= extended %></li>
+  closer: "</ul>"
+tag_templates:
+- name: pinpress_default
+  item: "<%= tag %> (<%= count %>),"

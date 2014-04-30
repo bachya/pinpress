@@ -20,7 +20,7 @@ module PinPress
       File.dirname(__FILE__),
       '..',
       '..',
-      'res/preference_prompts.yaml'
+      'support/preference_prompts.yaml'
     )
   }
 
