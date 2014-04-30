@@ -12,7 +12,7 @@ module PinPress
                    pin and tag templates in almost any conceivable format.)
 
   # The last version to require a config update
-  NEWEST_CONFIG_VERSION = '1.1.0'
+  NEWEST_CONFIG_VERSION = '1.2.1'
 
   # Hash of preference files
   PREF_FILES = {
@@ -28,5 +28,5 @@ module PinPress
   SUMMARY = 'A simple CLI to create HTML templates of Pinboard data.'
 
   # The Gem's version
-  VERSION = '1.2.1'
+  VERSION = '1.2.2'
 end

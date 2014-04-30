@@ -1,3 +1,7 @@
+# 1.2.2 (2014-04-29)
+
+* Fixed a bug in which the configuration wouldn't update as expected
+
 # 1.2.1 (2014-04-29)
 
 * Added `pinpress pins last` functionality
