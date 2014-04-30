@@ -122,8 +122,6 @@ $ pinpress pins -t "ruby,cli"
 
 ## Getting Pins Created Since Last Run
 
-Every time you run `pinpress pins`, the current date is added to `~/.pinpress`. Because of this, running:
-
 ```bash
 $ pinpress pins last
 ```
@@ -177,8 +175,6 @@ $ pinpress tags -t 'tag1,tag2' -s 2014-01-01
 ...returns all tags that have been used *alongside* `tag1` and `tag2`, starting on Jarnuary 1, 2014.
 
 ## Getting Tags Used Since Last Run
-
-Every time you run `pinpress tags`, the current date is added to `~/.pinpress`. Because of this, running:
 
 ```bash
 $ pinpress tags last
