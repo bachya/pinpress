@@ -126,7 +126,7 @@ $ pinpress pins -t "ruby,cli"
 $ pinpress pins last
 ```
 
-...will get all the pins created since that date (e.g., if you'd last run `pinpress pins` on 2014-01-01, this command would return all pins created from 2014-01-02 onward).
+...will get all the pins created since you last ran that command (e.g., if you'd last run `pinpress pins` on 2014-01-01, this command would return all pins created from 2014-01-02 onward).
 
 # Getting Tags
 
@@ -180,7 +180,7 @@ $ pinpress tags -t 'tag1,tag2' -s 2014-01-01
 $ pinpress tags last
 ```
 
-...will get all the tags used since that date (e.g., if you'd last run `pinpress tags` on 2014-01-01, this command would return all tags used from 2014-01-02 onward).
+...will get all the tags used since you last ran the command (e.g., if you'd last run `pinpress tags` on 2014-01-01, this command would return all tags used from 2014-01-02 onward).
 
 # Templates
 
