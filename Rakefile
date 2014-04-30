@@ -8,23 +8,29 @@ end
 
 spec = eval(File.read('pinpress.gemspec'))
 
-require 'rake/testtask'
-desc 'Run unit tests'
-Rake::TestTask.new do |t|
-  t.libs << "test"
-  t.test_files = FileList['test/*_test.rb']
-end
+# require 'rake/testtask'
+# desc 'Run unit tests'
+# Rake::TestTask.new do |t|
+#   t.libs << "test"
+#   t.test_files = FileList['test/*_test.rb']
+# end
+#
+# require 'cucumber'
+# require 'cucumber/rake/task'
+# CUKE_RESULTS = 'results.html'
+# CLEAN << CUKE_RESULTS
+# desc 'Run Cucumber features'
+# Cucumber::Rake::Task.new(:features) do |t|
+#   opts = "features --format html -o #{CUKE_RESULTS} --format progress -x"
+#   opts += " --tags @active"
+#   t.cucumber_opts = opts
+#   t.fork = false
+# end
 
-require 'cucumber'
-require 'cucumber/rake/task'
-CUKE_RESULTS = 'results.html'
-CLEAN << CUKE_RESULTS
-desc 'Run Cucumber features'
-Cucumber::Rake::Task.new(:features) do |t|
-  opts = "features --format html -o #{CUKE_RESULTS} --format progress -x"
-  opts += " --tags @active"
-  t.cucumber_opts = opts
-  t.fork = false
+require 'rspec/core/rake_task'
+desc "Run the specs."
+RSpec::Core::RakeTask.new do |t|
+  t.pattern = "spec/**/*_spec.rb"
 end
 
 require 'yard'
