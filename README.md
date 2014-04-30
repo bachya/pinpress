@@ -400,7 +400,7 @@ pinpress:
   ignored_tags: ['buffer']
   log_level: WARN
   version: 1.1.1
-  api_token: bachya:b819312cf9ccee799b87
+  api_token: bachya:1234567890987654321
   last_pins_run: 2014-04-29
   last_tags_run: 2014-04-29
 pin_templates:
