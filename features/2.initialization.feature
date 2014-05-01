@@ -1,4 +1,4 @@
-# @active
+@active
 Feature: Initialization
   As a user, when I initialize PinPress,
   I should be guided through the process as

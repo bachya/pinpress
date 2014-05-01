@@ -1,4 +1,4 @@
-# @active
+@active
 Feature: Templates
   As a user, I should be able to list available
   templates and choose one.

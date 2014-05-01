@@ -1,5 +1,4 @@
 @active
-@vcr
 Feature: Data
   As a user, I should be able get pins and tags
   from Pinboard and output them based on templates.
