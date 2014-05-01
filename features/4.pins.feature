@@ -1,9 +1,10 @@
 @active
-Feature: Templates
-  As a user, I should be able get pins from Pinboard
-  and have them inherit certain templates.
+@vcr
+Feature: Data
+  As a user, I should be able get pins and tags
+  from Pinboard and output them based on templates.
 
   Scenario: Invalid API Key
     Given an existing current configuration file located at "/tmp/pp/.pinpress"
-    When I run `pinpress pins` interactively
+    When I make the Pinboard request `pinpress pins`
     Then the exit status should be 0
