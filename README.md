@@ -3,17 +3,24 @@ PinPress
 [![Build Status](https://travis-ci.org/bachya/pinpress.svg?branch=master)](https://travis-ci.org/bachya/pinpress)
 [![Gem Version](https://badge.fury.io/rb/pinpress.svg)](http://badge.fury.io/rb/pinpress)
 
-PinPress is a simple CLI to create templates (HTML, Markdown, or otherwise) of Pinboard pins and tags.
+PinPress is a simple CLI to create templates (HTML, Markdown, or otherwise) of
+Pinboard pins and tags.
 
 # Why?
 
-Every week, I create a [link mash for my blog](#link-mash-config-file); this link mash consists of URLs that I find interesting and want to share with my readers. Previously, I would save those interesting URLs to an Evernote note and, every week, manually create my link mash for use in Wordpress. `<barf/>`
+Every week, I create a [link mash for my blog](#link-mash-config-file); this
+link mash consists of URLs that I find interesting and want to share with my
+readers. Previously, I would save those interesting URLs to an Evernote note
+and, every week, manually create my link mash for use in Wordpress. `<barf/>`
 
-When I began using [Pinboard](http://pinboard.in "Pinboard") to save interesting links, I knew I needed a better method. This tool is the result: **Pin** board + Word **press**.
+When I began using [Pinboard](http://pinboard.in "Pinboard") to save
+interesting links, I knew I needed a better method. This tool is the result:
+**Pin** board + Word **press**.
 
 # Prerequisites
 
-In addition to Git (which, given you being on this site, I'll assume you have), Ruby (v. 1.9.3 or greater) is needed.
+In addition to Git (which, given you being on this site, I'll assume you have),
+Ruby (v. 1.9.3 or greater) is needed.
 
 # Installation
 
@@ -49,7 +56,8 @@ COMMANDS
     templates - Work with templates for pin output
 ```
 
-Note that each command's options can be revealed by adding the `--help` switch after the command. For example:
+Note that each command's options can be revealed by adding the `--help` switch
+after the command. For example:
 
 ```bash
 $ pinpress pins --help
@@ -72,7 +80,8 @@ COMMAND OPTIONS
 $ pinpress init
 ```
 
-Initialization will prompt you to enter your Pinboard API token. Once, entered, this (and other pertinent data) will be stored in `~/.pinpress`.
+Initialization will prompt you to enter your Pinboard API token. Once, entered,
+this (and other pertinent data) will be stored in `~/.pinpress`.
 
 # Getting Pins
 
@@ -80,9 +89,11 @@ Initialization will prompt you to enter your Pinboard API token. Once, entered, 
 $ pinpress pins
 ```
 
-This simple command will return all pins from the user's account and output them based on the [Pin Template](#pin-templates "Pin Templates") provided.
+This simple command will return all pins from the user's account and output them
+based on the [Pin Template](#pin-templates "Pin Templates") provided.
 
-Pinpress also provides some flags that allow a user to define specific pins to grab:
+Pinpress also provides some flags that allow a user to define specific pins to
+grab:
 
 * `-s`: the start date to use (uses [Chronic](https://github.com/mojombo/chronic "Chronic"), which allows dates like "last Tuesday")
 * `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
@@ -127,7 +138,9 @@ $ pinpress pins -t "ruby,cli"
 $ pinpress pins last
 ```
 
-...will get all the pins created since you last ran that command (e.g., if you'd last run `pinpress pins` on 2014-01-01, this command would return all pins created from 2014-01-02 onward).
+...will get all the pins created since you last ran that command (e.g., if you'd
+last run `pinpress pins` on 2014-01-01, this command would return all pins
+created from 2014-01-02 onward).
 
 # Getting Tags
 
@@ -137,9 +150,11 @@ Pinpress can also work with tags in a Pinboard account:
 $ pinpress tags
 ```
 
-This simple command will return all tags from the user's account and output them based on the [Tag Template](#tag-templates "Tag Templates") provided.
+This simple command will return all tags from the user's account and output them
+based on the [Tag Template](#tag-templates "Tag Templates") provided.
 
-Pinpress also provides some flags that allow a user to define specific tags to grab:
+Pinpress also provides some flags that allow a user to define specific tags to
+grab:
 
 * `-s`: the start date to use (uses [Chronic](https://github.com/mojombo/chronic "Chronic"), which allows dates like "last Tuesday")
 * `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
@@ -151,7 +166,9 @@ Pinpress also provides some flags that allow a user to define specific tags to g
 $ pinpress tags -s 2014-01-01
 ```
 
-...returns all tags used from January 1, 2014 to the current day. Note that for each tag returned, the data includes both the tag name and the number of times it was used.
+...returns all tags used from January 1, 2014 to the current day. Note that for
+each tag returned, the data includes both the tag name and the number of times
+it was used.
 
 ## Getting Tags Until a Date
 
@@ -173,7 +190,8 @@ $ pinpress tags -s 2014-01-01 -e 2014-01-31
 $ pinpress tags -t 'tag1,tag2' -s 2014-01-01
 ```
 
-...returns all tags that have been used *alongside* `tag1` and `tag2`, starting on Jarnuary 1, 2014.
+...returns all tags that have been used *alongside* `tag1` and `tag2`, starting
+on Jarnuary 1, 2014.
 
 ## Getting Tags Used Since Last Run
 
@@ -181,11 +199,15 @@ $ pinpress tags -t 'tag1,tag2' -s 2014-01-01
 $ pinpress tags last
 ```
 
-...will get all the tags used since you last ran the command (e.g., if you'd last run `pinpress tags` on 2014-01-01, this command would return all tags used from 2014-01-02 onward).
+...will get all the tags used since you last ran the command (e.g., if you'd
+last run `pinpress tags` on 2014-01-01, this command would return all tags used
+from 2014-01-02 onward).
 
 # Templates
 
-Templates are used to define how data should be output to the terminal and are defined in `~/.pinpress`. They come in two forms: **Pin Templates** and **Tag Templates**.
+Templates are used to define how data should be output to the terminal and are
+defined in `~/.pinpress`. They come in two forms: **Pin Templates** and **Tag
+Templates**.
 
 ## Pin Templates
 
@@ -193,7 +215,8 @@ Pin Templates define how a pin from Pinboard should be output.
 
 ### Schema
 
-Pin Templates are placed under the `pin_templates` section of the `~/.pinpress` config file -- as an example:
+Pin Templates are placed under the `pin_templates` section of the `~/.pinpress`
+config file -- as an example:
 
 ```yaml
 pin_templates:
@@ -217,7 +240,8 @@ A Pin Template can have several different sub-keys:
 
 ### Available Tokens
 
-Additionally, a Pin Template can make use of several different tokens that are filled by a pin's values:
+Additionally, a Pin Template can make use of several different tokens that are
+filled by a pin's values:
 
 * `<%= href %>`: the URL of the pin
 * `<%= description %>`: the description of the pin
@@ -285,7 +309,8 @@ $ pinpress pins pinpress_default
 </ul>
 ```
 
-(Note that the nice indenting is for Github's sake; the actual output will conform to the formatting in `~/.pinpress`.)
+(Note that the nice indenting is for Github's sake; the actual output will
+conform to the formatting in `~/.pinpress`.)
 
 ## Tag Templates
 
@@ -313,7 +338,8 @@ A Tag Template makes use of the same sub-keys as Pin Template:
 Additionally, like a Pin Template, a Tag Template can make use of a few tokens:
 
 * `<%= tag %>`: the name of the tag
-* `<%= count %>`: the number of times the tag has been used (depending on the range used)
+* `<%= count %>`: the number of times the tag has been used (depending on the
+range used)
 
 ### Usage
 
@@ -358,7 +384,8 @@ link-mash (15),app (2),ios (3),productivity (1),launch-center-pro (1),drafts (2)
 
 # Other Configuration Options
 
-You can place special keys in the `pinpress` section of `~/.pinpress` to automate some actions:
+You can place special keys in the `pinpress` section of `~/.pinpress` to
+automate some actions:
 
 ```yaml
 pinpress:
@@ -389,7 +416,8 @@ Do note:
 
 # Link Mash Config File
 
-For your reference, here's my `~/.pinpress` (which is used to generate a [Link Mash on my blog](http://www.bachyaproductions.com/tag/link-mash/ "Bachya Productions Link Mash Archives")):
+For your reference, here's my `~/.pinpress` (which is used to generate a
+[Link Mash on my blog](http://www.bachyaproductions.com/tag/link-mash/ "Bachya Productions Link Mash Archives")):
 
 ```yaml
 ---
@@ -435,13 +463,16 @@ tag_templates:
 
 # Known Issues & Future Releases
 
-Check out the Pinpress roadmap via the [Trello Board](https://trello.com/b/lmuC8TT0/pinpress "Pinpress Trello Board").
+Check out the Pinpress roadmap via the
+[Trello Board](https://trello.com/b/lmuC8TT0/pinpress "Pinpress Trello Board").
 
-Bugs, issues, and enhancement requests can be submitted on the [Issues Page](https://github.com/bachya/Pinpress/issues "Open Items").
+Bugs, issues, and enhancement requests can be submitted on the
+[Issues Page](https://github.com/bachya/Pinpress/issues "Open Items").
 
 # Bugs and Feature Requests
 
-To report bugs with or suggest features/changes for PinPress, please use the [Issues Page](http://github.com/bachya/PinPress/issues).
+To report bugs with or suggest features/changes for PinPress, please use the
+[Issues Page](http://github.com/bachya/PinPress/issues).
 
 Contributions are welcome and encouraged. To contribute:
 
@@ -457,8 +488,20 @@ Contributions are welcome and encouraged. To contribute:
 
 Copyright © 2014 Aaron Bach <bachya1208@gmail.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the 'Software'), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

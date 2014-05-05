@@ -1,3 +1,8 @@
+# 1.2.3 (2014-05-04)
+
+* Fixed a bug where error management failed
+* Updated documentation
+
 # 1.2.2 (2014-04-29)
 
 * Fixed a bug in which the configuration wouldn't update as expected
