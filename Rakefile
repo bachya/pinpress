@@ -53,4 +53,4 @@ task :build do
   FileUtils.mv("./pinpress-#{ version }.gem", "pkg")
 end
 
-task :default => [:features] #:yard, :test, :features
+task :default => [:yard, :test, :features]
