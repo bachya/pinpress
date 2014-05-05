@@ -190,9 +190,8 @@ module PinPress
     pm.ask
     configuration.ingest_prefs(pm)
 
-    messenger.debug {
-      "Configuration values after pref collection: #{ configuration.data }"
-    }
+    messenger.debug("Configuration values after pref collection: #{ configuration.data }")
+
     configuration.save
     @initialized = true
   end

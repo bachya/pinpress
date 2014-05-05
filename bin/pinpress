@@ -67,7 +67,7 @@ pre do |global, command, options, args|
 
     # Compare the two versions and, if needed, update.
     configuration.compare_version do |c, l|
-      messenger.debug { "Upgrading from #{ c } to #{ l }" }
+      messenger.debug("Upgrading from #{ c } to #{ l }")
       PinPress.update_config_file
       exit!(0)
     end
@@ -85,9 +85,9 @@ post do |global, command, options, args|
 end
 
 on_error do |exception|
-  messenger.error(exception.to_s)
-  exit!(1)
-  true
+  # messenger.error(exception.to_s)
+  # exit!(1)
+  # true
 end
 
 # ======================================================

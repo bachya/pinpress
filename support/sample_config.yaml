@@ -4,7 +4,7 @@ pinpress:
   default_pin_template: pinpress_default
   default_tag_template: pinpress_default
   log_level: WARN
-  api_token: bachya:b819312cf9ccee799b87
+  api_token: bachya:12345
 pin_templates:
 - name: pinpress_default
   opener: "<ul>"

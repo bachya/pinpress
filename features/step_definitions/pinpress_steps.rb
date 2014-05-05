@@ -21,12 +21,6 @@ When /^I get help for "([^"]*)"$/ do |app_name|
   step %(I run `#{app_name} help`)
 end
 
-When(/^I make the Pinboard request `([^`]*)`$/) do |cmd|
-  VCR.use_cassette('synopsis') do
-    step %(I run `#{cmd}`)
-  end
-end
-
 Then(/^the following files should not be empty:$/) do |table|
   table.cell_matrix.flatten.each do |file|
     expect(File.file?(file.value)).to eq(true)
