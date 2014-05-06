@@ -8,11 +8,11 @@ end
 
 spec = eval(File.read('pinpress.gemspec'))
 
-require 'rake/testtask'
-desc 'Run unit tests'
-Rake::TestTask.new do |t|
-  t.libs << "test"
-  t.test_files = FileList['test/*_test.rb']
+require 'rspec/core/rake_task'
+desc "Run the specs."
+RSpec::Core::RakeTask.new do |t|
+  t.pattern = "spec/**/*_spec.rb"
+  t.verbose = false
 end
 
 require 'cucumber'
@@ -53,4 +53,4 @@ task :build do
   FileUtils.mv("./pinpress-#{ version }.gem", "pkg")
 end
 
-task :default => [:yard, :test, :features]
+task :default => [:yard, :spec, :features]

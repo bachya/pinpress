@@ -9,7 +9,7 @@ module PinPress
 
   # The Gem's description
   DESCRIPTION = %q(A Pinboard application that allows for the creation of
-                   pin and tag templates in almost any conceivable format.)
+                  pin and tag templates in almost any conceivable format.)
 
   # The last version to require a config update
   NEWEST_CONFIG_VERSION = '1.2.1'

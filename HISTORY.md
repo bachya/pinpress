@@ -1,3 +1,10 @@
+# 1.3.0 (2014-05-05)
+
+* Huge refactoring; much cleaner
+* Added HTML encoding to pin desriptions
+* Fixed bugs with application of tags to both `pins` and `tags` command
+* Bumped CLIUtils to version 2.2.3
+
 # 1.2.3 (2014-05-04)
 
 * Fixed a bug where error management failed

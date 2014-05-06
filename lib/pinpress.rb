@@ -1,11 +1,11 @@
 require 'pinpress/constants'
-require 'pinpress/templates/template'
-require 'pinpress/templates/pin_template'
-require 'pinpress/templates/tag_template'
+require 'pinpress/template'
 
 # The PinPress module, which wraps everything
 # in this gem.
 module PinPress
+  extend self
+
   class << self
     # Stores whether initalization has completed.
     # @return [Boolean]
@@ -16,137 +16,63 @@ module PinPress
     attr_accessor :verbose
   end
 
-  # Establishes the template to use and yields a block with that
-  # template an a Pinboard client.
-  # @param [Fixnum] template_type Either a Pin or Tag template
-  # @param [String] template_name The neame of the template to use
-  # @yield
-  # @return [void]
-  def self.execute_template(template_type, template_name)
-    template_hash = PinPress.get_template_by_name(template_type, template_name)
-    if template_hash
-      template = PinPress::TagTemplate.new(template_hash)
+  # Grabs Pinboard data (passed on passed options) and yields a block that
+  # allows the user to act upon that returned data.
+  # @param [Hash] pinboard_opts
+  # @yield pins
+  # @raise StandardError if Pinboard client fails
+  def execute_template(pinboard_opts)
+    begin
       client = Pinboard::Client.new(token: configuration.pinpress[:api_token])
-      yield template, client
-    else
-      fail 'Invalid template provided and/or no default template'
+      pins = client.posts(pinboard_opts)
+      if pins.empty?
+        messenger.warn('No data matching your arguments...')
+      else
+        yield pins
+      end
+    rescue StandardError => e
+      messenger.debug(e.to_s)
+      puts e.to_s
+      raise "Pinboard API failed; are you sure you've run " \
+           " `pinpress init` (and that your API key is correct)?"
     end
   end
 
-  # Generates a string of items from pins.
-  # @param [Fixnum] template_type
-  # @param [PinPress::Template] template
-  # @param [Array] pins
-  # @return [String]
-  def self.generate_items(template_type, template, pins, opts)
-    output = ''
+  # Returns a template Hash from the configuration file.
+  # @param [String] template_name The name of the template to get
+  # @param [Fixnum] template_type The template type
+  # @return [Hash]
+  def get_template(template_name, template_type)
     case template_type
-    when PinPress::Template::TEMPLATE_TYPE_PIN
-      pins.each do |p|
-        href        = p[:href]
-        description = p[:description]
-        extended    = p[:extended]
-        tag         = p[:tag]
-        time        = p[:time]
-        replace     = p[:replace]
-        shared      = p[:shared]
-        toread      = p[:toread]
-        output += ERB.new(template.item).result(binding)
-      end
-      configuration.pinpress[:last_pins_run] = Date.today
-    when PinPress::Template::TEMPLATE_TYPE_TAG
-      tags = []
-      pins.each { |p| tags += p[:tag] }
-      tags = tags.uniq.map { |t| { tag: t, count: tags.count(t) } }
-      tags.each do |t|
-        unless t[:tag] == opts[:tag]
-          tag   = t[:tag]
-          count = t[:count]
-          output += ERB.new(template.item).result(binding)
-        end
-      end
-      configuration.pinpress[:last_tags_run] = Date.today
-    end
-    output
-  end
-
-  # Generic function to get data from Pinboard.
-  # @param [Fixnum] template_type
-  # @param [Array] args
-  # @param [Hash] options
-  # @return [String]
-  def self.get_data(template_type, args, options)
-    output = ''
-
-    # Two scenarios covered here:
-    #   1. If the user passes a valid name, grab that template.
-    #   2. If no name is passed, grabbed the default template
-    # If both of these conditions fail, an error message is shown.
-    # t_type = PinPress::Template::TEMPLATE_TYPE_PIN
-    # t_name = args.empty? ? nil : args[0]
-    t_name = args.empty? ? nil : args[0]
-
-    PinPress.execute_template(template_type, t_name) do |template, client|
-      opts = {}
-      opts.merge!(todt: Chronic.parse(options[:e])) if options[:e]
-      opts.merge!(fromdt: Chronic.parse(options[:s])) if options[:s]
-
-      if options[:n]
-        opts.merge!(results: options[:n])
-      elsif configuration.pinpress[:default_num_results]
-        opts.merge!(results: configuration.pinpress[:default_num_results])
-      end
-
-      if options[:t]
-        tags = options[:t].split(',')
-      elsif configuration.pinpress[:default_tags]
-        tags = configuration.pinpress[:default_tags]
-      end
-
-      ignored_tags = configuration.pinpress[:ignored_tags]
-      tags -= ignored_tags if ignored_tags
-      opts.merge!(tag: tags) if tags
-
-      begin
-        pins = client.posts(opts)
-        if pins.empty?
-          messenger.warn('No matching pins...')
-        else
-          output += template.opener if template.opener
-          output += PinPress.generate_items(template_type, template, pins, opts)
-          output += template.closer if template.closer
-        end
-
-        configuration.save
-        return output
-      rescue StandardError => e
-        messenger.debug(e.to_s)
-        raise "Pinboard API failed; are you sure you've run " \
-             " `pinpress init` (and that your API key is correct)?"
-      end
-    end
-  end
-
-  # Determines whether a template exists.
-  # @param [Fixnum] template_type
-  # @param [<String, Symbol>] template_name
-  # @return [Template]
-  def self.get_template_by_name(template_type, template_name = nil)
-    case template_type
-    when Template::TEMPLATE_TYPE_PIN
-      default_t_name = configuration.pinpress[:default_pin_template]
+    when PinPress::Template::TYPE_PIN
       templates = configuration.pin_templates
-    when Template::TEMPLATE_TYPE_TAG
-      default_t_name = configuration.pinpress[:default_tag_template]
+    when PinPress::Template::TYPE_TAG
       templates = configuration.tag_templates
-    else
-      fail 'Invalid template type given'
     end
+    templates.find { |t| t[:name] == template_name }
+  end
 
-    if template_name.nil?
-      return templates.find { |t| t[:name] == default_t_name }
+  # "Initializes" a passed template:
+  #    1. If the template exists, returns it.
+  #    2. If not, return a default template (if it exists).
+  #    3. Throw an exception if #1 and #2 fail.
+  # @param [String] explicit_template A template name passed in via the CLI
+  # @param [Fixnum] template_type The template type
+  # @return [Hash]
+  # @raise StandardError if no explicit or default template is found
+  def init_template(explicit_template, template_type)
+    pin_t_sym = :default_pin_template
+    tag_t_sym = :default_tag_template
+    s = (template_type == PinPress::Template::TYPE_PIN ? pin_t_sym : tag_t_sym)
+    default_template = configuration.pinpress[s]
+    if PinPress.is_template?(explicit_template, template_type)
+      messenger.debug("Using explicit template: #{ explicit_template }")
+      return PinPress.get_template(explicit_template, template_type)
+    elsif PinPress.is_template?(default_template, template_type)
+      messenger.debug("Using default template: #{ default_template }")
+      return PinPress.get_template(default_template, template_type)
     else
-      return templates.find { |t| t[:name] == template_name }
+      fail 'Invalid template defined and/or no default template specified'
     end
   end
 
@@ -154,7 +80,7 @@ module PinPress
   # collecting all necessary items and info.
   # @param [Boolean] from_scratch
   # @return [void]
-  def self.init(from_scratch = false)
+  def init(from_scratch = false)
     messenger.section('INITIALIZING...')
     if from_scratch
       configuration.reset
@@ -190,15 +116,29 @@ module PinPress
     pm.ask
     configuration.ingest_prefs(pm)
 
-    messenger.debug("Configuration values after pref collection: #{ configuration.data }")
+    m = "Configuration values after pref collection: #{ configuration.data }"
+    messenger.debug(m)
 
     configuration.save
     @initialized = true
   end
 
+  # Determines whether a template exists in the configuration file.
+  # @param [String] template_name The name of the template to search for
+  # @param [Fixnum] template_type The template type
+  def is_template?(template_name, template_type)
+    case template_type
+    when PinPress::Template::TYPE_PIN
+      templates = configuration.pin_templates
+    when PinPress::Template::TYPE_TAG
+      templates = configuration.tag_templates
+    end
+    !templates.find { |t| t[:name] == template_name }.nil?
+  end
+
   # Present a list of installed templates to the user
   # @return [void]
-  def self.list_templates
+  def list_templates
     pin_templates = configuration.pin_templates
     tag_templates = configuration.tag_templates
 
@@ -221,10 +161,84 @@ module PinPress
     end
   end
 
+  # Helper method to merge command line options that are relevant for both pin
+  # and tag requests.
+  # @param [Hash] options
+  # @return [Hash]
+  def merge_common_options(options)
+    opts = {}
+    if options[:n]
+      opts.merge!(results: options[:n])
+    elsif configuration.pinpress[:default_num_results]
+      opts.merge!(results: configuration.pinpress[:default_num_results])
+    end
+
+    if options[:t]
+      opts.merge!(tag: options[:t])
+    elsif configuration.pinpress[:default_tags]
+      opts.merge!(tag: configuration.pinpress[:default_tags].join(','))
+    end
+    opts
+  end
+
+  # Creates text output from pin data (based upon a passed template).
+  # @param [Hash] template The template to use
+  # @param [Hash] opts CLI options to use
+  # @return [String]
+  def pin_yield(template, opts)
+    output = ''
+    PinPress.execute_template(opts) do |data|
+      html_coder = HTMLEntities.new
+
+      output += template[:opener] if template[:opener]
+      data.each do |i|
+        href        = i[:href]
+        description = html_coder.encode(i[:description])
+        extended    = i[:extended]
+        tag         = i[:tag]
+        time        = i[:time]
+        replace     = i[:replace]
+        shared      = i[:shared]
+        toread      = i[:toread]
+        output += ERB.new(template[:item]).result(binding)
+      end
+      output += template[:closer] if template[:closer]
+    end
+    output
+  end
+
+  # Creates text output from tag data (based upon a passed template).
+  # @param [Hash] template The template to use
+  # @param [Hash] opts CLI options to use
+  # @return [String]
+  def tag_yield(template, opts)
+    output = ''
+    PinPress.execute_template(opts) do |data|
+      tags = []
+      ignored_tags = configuration.pinpress[:ignored_tags]
+
+      data.each { |i| tags += i[:tag] }
+      tags = (tags -= ignored_tags if ignored_tags).uniq.map do |t|
+        { tag: t, count: tags.count(t) }
+      end
+
+      output += template[:opener] if template[:opener]
+      tags.each do |t|
+        unless t[:tag] == opts[:tag]
+          tag   = t[:tag]
+          count = t[:count]
+          output += ERB.new(template.item).result(binding)
+        end
+      end
+      output += template[:closer] if template[:closer]
+    end
+    output
+  end
+
   # Notifies the user that the config file needs to be
   # re-done and does it.
   # @return [void]
-  def self.update_config_file
+  def update_config_file
     m = "This version needs to make some config changes. Don't worry; " \
         "when prompted, your current values for existing config options " \
         "will be presented (so it'll be easier to fly through the upgrade)."
