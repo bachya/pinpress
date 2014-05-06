@@ -8,7 +8,7 @@ pinpress:
 pin_templates:
 - name: pinpress_default
   opener: "<ul>"
-  item: <li><b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b> <%= extended %></li>
+  item: <li><%= href %></li>
   closer: "</ul>"
 tag_templates:
 - name: pinpress_default
