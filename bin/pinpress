@@ -59,7 +59,7 @@ pre do |global, command, options, args|
   # Load PinPress configuration module.
   load_configuration(PinPress::CONFIG_FILEPATH)
   file_logger = Logger.new(PinPress::LOG_FILEPATH)
-  file_logger.level = LOG_LEVELS[configuration.pinpress[:log_level] || 'DEBUG']
+  file_logger.level = LOG_LEVELS[configuration.pinpress.log_level || 'DEBUG']
   messenger.attach(LOGFILE: file_logger)
 
   if File.exist?(PinPress::CONFIG_FILEPATH)
@@ -149,12 +149,12 @@ command :pins do |c|
     opts.merge!(fromdt: Chronic.parse(options[:s])) if options[:s]
     opts.merge!(PinPress.merge_common_options(options))
 
-    # Request pin data from Pinboard and output the return data
+    # Request pin data from Pinboard and output the return data.
     output = PinPress.pin_yield(template, opts)
     puts output if output
 
     # Save the last-run date to the configuration file.
-    configuration.pinpress[:last_pins_run] = Date.today
+    configuration.pinpress.last_pins_run = Date.today
     configuration.save
   end
 
@@ -163,7 +163,7 @@ command :pins do |c|
     last.action do |global_options, options, args|
       PinPress.verbose = global_options[:v]
 
-      last_run_date = configuration.pinpress[:last_pins_run]
+      last_run_date = configuration.pinpress.last_pins_run
       if last_run_date
         # Figure out the template to use based on the passed argument (if any)
         # and/or the presence of a default template.
@@ -174,12 +174,12 @@ command :pins do |c|
         opts.merge!(fromdt: last_run_date + 1)
         opts.merge!(PinPress.merge_common_options(options))
 
-        # Request pin data from Pinboard and output the return data
+        # Request pin data from Pinboard and output the return data.
         output = PinPress.pin_yield(template, opts)
         puts output if output
 
         # Save the last-run date to the configuration file.
-        configuration.pinpress[:last_pins_run] = Date.today
+        configuration.pinpress.last_pins_run = Date.today
         configuration.save
       else
         messenger.warn("`pinpress pins` hasn't been run before.")
@@ -202,7 +202,7 @@ command :tags do |c|
   c.desc 'Gets all tags from the last run date + 1'
   c.command :last do |last|
     last.action do |global_options, options, args|
-      last_run_date = configuration.pinpress[:last_tags_run]
+      last_run_date = configuration.pinpress.last_tags_run
       if last_run_date
         PinPress.verbose = global_options[:v]
 
@@ -215,12 +215,12 @@ command :tags do |c|
         opts.merge!(fromdt: last_run_date + 1)
         opts.merge!(PinPress.merge_common_options(options))
 
-        # Request pin data from Pinboard and output the return data
+        # Request tag data from Pinboard and output the return data.
         output = PinPress.tag_yield(template, opts)
         puts output if output
 
         # Save the last-run date to the configuration file.
-        configuration.pinpress[:last_tags_run] = Date.today
+        configuration.pinpress.last_tags_run = Date.today
         configuration.save
       else
         messenger.warn("`pinpress tags` hasn't been run before.")
@@ -248,7 +248,7 @@ command :tags do |c|
     puts output if output
 
     # Save the last-run date to the configuration file.
-    configuration.pinpress[:last_tags_run] = Date.today
+    configuration.pinpress.last_tags_run = Date.today
     configuration.save
   end
 end

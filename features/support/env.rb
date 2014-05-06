@@ -1,4 +1,5 @@
 require 'aruba/cucumber'
+require 'simplecov'
 require_relative '../../lib/pinpress/constants'
 
 ENV['PATH'] = "#{File.expand_path(File.dirname(__FILE__) + '/../../bin')}#{File::PATH_SEPARATOR}#{ENV['PATH']}"

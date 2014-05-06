@@ -1,9 +1,9 @@
 # require 'coveralls'
 require 'rspec'
-# require 'simplecov'
+require 'simplecov'
 require 'stringio'
 
-# SimpleCov.start
+SimpleCov.start
 # Coveralls.wear!
 
 def capture_stdout

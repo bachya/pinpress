@@ -23,7 +23,7 @@ module PinPress
   # @raise StandardError if Pinboard client fails
   def execute_template(pinboard_opts)
     begin
-      client = Pinboard::Client.new(token: configuration.pinpress[:api_token])
+      client = Pinboard::Client.new(token: configuration.pinpress.api_token)
       pins = client.posts(pinboard_opts)
       if pins.empty?
         messenger.warn('No data matching your arguments...')
@@ -84,41 +84,40 @@ module PinPress
     messenger.section('INITIALIZING...')
     if from_scratch
       configuration.reset
-      configuration.add_section(:pinpress)
-      configuration.add_section(:pin_templates)
-      configuration.add_section(:tag_templates)
 
-      configuration.pinpress.merge!(
+      # Add initial configuration info.
+      configuration.add_section(:pinpress)
+      configuration.pinpress = {
         config_location: configuration.config_path,
         default_pin_template: 'pinpress_default',
         default_tag_template: 'pinpress_default',
         log_level: 'WARN',
         version: PinPress::VERSION
-      )
+      }
 
+      # Add a single default pin and tag template
       default_pin_template = {
         name: 'pinpress_default',
         opener: '<ul>',
-        item: '<li><b><a title="<%= description %>" href="<%= href %>" target="_blank"><%= description %></a>.</b> <%= extended %></li>',
+        item: '<li><%= href %></li>',
         closer: '</ul>'
       }
-
       default_tag_template = {
         name: 'pinpress_default',
         item: '<%= tag %> (<%= count %>),'
       }
-
-      configuration.data['pin_templates'] = [default_pin_template]
-      configuration.data['tag_templates'] = [default_tag_template]
+      configuration.pin_templates = [default_pin_template]
+      configuration.tag_templates = [default_tag_template]
     end
 
+    # Run through installation prompts and ingest the results into
+    # the configuration.
     pm = CLIUtils::Prefs.new(PinPress::PREF_FILES['INIT'], configuration)
     pm.ask
     configuration.ingest_prefs(pm)
 
     m = "Configuration values after pref collection: #{ configuration.data }"
     messenger.debug(m)
-
     configuration.save
     @initialized = true
   end
@@ -169,14 +168,14 @@ module PinPress
     opts = {}
     if options[:n]
       opts.merge!(results: options[:n])
-    elsif configuration.pinpress[:default_num_results]
-      opts.merge!(results: configuration.pinpress[:default_num_results])
+    elsif configuration.pinpress.default_num_results
+      opts.merge!(results: configuration.pinpress.default_num_results)
     end
 
     if options[:t]
       opts.merge!(tag: options[:t])
-    elsif configuration.pinpress[:default_tags]
-      opts.merge!(tag: configuration.pinpress[:default_tags].join(','))
+    elsif configuration.pinpress.default_tags
+      opts.merge!(tag: configuration.pinpress.default_tags.join(','))
     end
     opts
   end
@@ -215,7 +214,7 @@ module PinPress
     output = ''
     PinPress.execute_template(opts) do |data|
       tags = []
-      ignored_tags = configuration.pinpress[:ignored_tags]
+      ignored_tags = configuration.pinpress.ignored_tags
 
       data.each { |i| tags += i[:tag] }
       tags = (tags -= ignored_tags if ignored_tags).uniq.map do |t|
