@@ -158,7 +158,6 @@ grab:
 
 * `-s`: the start date to use (uses [Chronic](https://github.com/mojombo/chronic "Chronic"), which allows dates like "last Tuesday")
 * `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
-* `-t`: a CSV list of tags (e.g., "tag1,tag2") to examine for association (see [below](#getting-tags-that-have-been-used-with-other-tags)).
 
 ## Getting Tags From a Date Forward
 
@@ -183,15 +182,6 @@ $ pinpress tags -e 2014-01-01
 ```bash
 $ pinpress tags -s 2014-01-01 -e 2014-01-31
 ```
-
-## Getting Tags that Have Been Used With Other Tags
-
-```bash
-$ pinpress tags -t 'tag1,tag2' -s 2014-01-01
-```
-
-...returns all tags that have been used *alongside* `tag1` and `tag2`, starting
-on Jarnuary 1, 2014.
 
 ## Getting Tags Used Since Last Run
 
@@ -397,10 +387,10 @@ pinpress:
   # The default `tags` template to use
   default_tag_template
 
-  # The default tags to be used when getting pins or associated tags
+  # The default tags to be used when running `pinpress pins`
   default_tags: ['tag1', 'tag2']
 
-  # The tags to ignore when executing either `pins` or `tags`
+  # The tags to that are removed from the results when running `pinpress tags`
   ignored_tags: ['bad-tag', 'bad-tag2']
 
   # The default number of results to return
