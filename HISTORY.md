@@ -1,3 +1,7 @@
+# 1.3.1 (2014-05-06)
+
+* Modified last-run to store DateTime, rather than just a Date
+
 # 1.3.0 (2014-05-05)
 
 * Huge refactoring; much cleaner

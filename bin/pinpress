@@ -154,7 +154,7 @@ command :pins do |c|
     puts output if output
 
     # Save the last-run date to the configuration file.
-    configuration.pinpress.last_pins_run = Date.today
+    configuration.pinpress.last_pins_run = Time.now.utc.iso8601
     configuration.save
   end
 
@@ -179,7 +179,7 @@ command :pins do |c|
         puts output if output
 
         # Save the last-run date to the configuration file.
-        configuration.pinpress.last_pins_run = Date.today
+        configuration.pinpress.last_pins_run = Time.now.utc.iso8601
         configuration.save
       else
         messenger.warn("`pinpress pins` hasn't been run before.")
@@ -220,7 +220,7 @@ command :tags do |c|
         puts output if output
 
         # Save the last-run date to the configuration file.
-        configuration.pinpress.last_tags_run = Date.today
+        configuration.pinpress.last_tags_run = Time.now.utc.iso8601
         configuration.save
       else
         messenger.warn("`pinpress tags` hasn't been run before.")
@@ -248,7 +248,7 @@ command :tags do |c|
     puts output if output
 
     # Save the last-run date to the configuration file.
-    configuration.pinpress.last_tags_run = Date.today
+    configuration.pinpress.last_tags_run = Time.now.utc.iso8601
     configuration.save
   end
 end

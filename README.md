@@ -42,7 +42,7 @@ SYNOPSIS
     pinpress [global options] command [command options] [arguments...]
 
 VERSION
-    1.3.0
+    1.3.1
 
 GLOBAL OPTIONS
     --help    - Show this message
