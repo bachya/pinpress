@@ -1,4 +1,4 @@
-@active
+# @active
 Feature: Templates
   As a user, I should be able to list available
   templates and choose one.
@@ -10,9 +10,15 @@ Feature: Templates
       And the output should contain:
       """
       ---> AVAILABLE PIN TEMPLATES:
-      # 1. pinpress_default
+      1.  Name:   pinpress_default
+        Opener:   <ul>
+          Item:   <li><%= href %></li>
+        Closer:   </ul>
       ---> AVAILABLE TAG TEMPLATES:
-      # 1. pinpress_default
+      1.  Name:   pinpress_default
+        Opener:   
+          Item:   <%= tag %> (<%= count %>),
+        Closer:   
       """
 
   Scenario: List Templates (explicit)
@@ -22,7 +28,13 @@ Feature: Templates
       And the output should contain:
       """
       ---> AVAILABLE PIN TEMPLATES:
-      # 1. pinpress_default
+      1.\tName:   pinpress_default
+            Opener:   <ul>
+              Item:   <li><%= href %></li>
+            Closer:   </ul>
       ---> AVAILABLE TAG TEMPLATES:
-      # 1. pinpress_default
+      1.      Name:   pinpress_default
+            Opener:   
+              Item:   <%= tag %> (<%= count %>),
+            Closer:   
       """
