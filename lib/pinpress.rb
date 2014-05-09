@@ -144,7 +144,10 @@ module PinPress
     messenger.section('AVAILABLE PIN TEMPLATES:')
     if pin_templates
       pin_templates.each_with_index do |template, index|
-        messenger.info("#{ index + 1 }. #{ template[:name] }")
+        puts "#{ index + 1 }.\tName:   ".blue + "#{ template[:name] }"
+        puts "Opener:".blue.rjust(22) + "\t#{ template[:opener] }".truncate(80)
+        puts "Item:".blue.rjust(22) + "\t#{ template[:item] }".truncate(80)
+        puts "Closer:".blue.rjust(22) + "\t#{ template[:closer] }".truncate(80)
       end
     else
       messenger.warn('No templates defined...')
@@ -153,7 +156,10 @@ module PinPress
     messenger.section('AVAILABLE TAG TEMPLATES:')
     if tag_templates
       tag_templates.each_with_index do |template, index|
-        messenger.info("#{ index + 1 }. #{ template[:name] }")
+        puts "#{ index + 1 }.\tName:   ".blue + "#{ template[:name] }"
+        puts "Opener:".blue.rjust(22) + "\t#{ template[:opener] }".truncate(80)
+        puts "Item:".blue.rjust(22) + "\t#{ template[:item] }".truncate(80)
+        puts "Closer:".blue.rjust(22) + "\t#{ template[:closer] }".truncate(80)
       end
     else
       messenger.warn('No templates defined...')

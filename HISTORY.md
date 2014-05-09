@@ -1,3 +1,7 @@
+# 1.3.2 (2014-05-08)
+
+* Added ability to list template contents, along with name
+
 # 1.3.1 (2014-05-06)
 
 * Modified last-run to store DateTime, rather than just a Date
