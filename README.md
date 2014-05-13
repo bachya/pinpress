@@ -69,6 +69,7 @@ SYNOPSIS
 
 COMMAND OPTIONS
     -e arg - The end date to pull pins to (default: none)
+    -m arg - The pin template to use (default: none)
     -n arg - The number of results to return (default: none)
     -s arg - The start date to pull pins from (default: none)
     -t arg - The tags to use (e.g., "ruby,pinboard") (default: none)
