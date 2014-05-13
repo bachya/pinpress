@@ -92,11 +92,11 @@ end
 # ======================================================
 # Error (runs when an exception is raised)
 # ======================================================
-on_error do |exception|
-  messenger.error(exception.to_s)
-  exit!(1)
-  true
-end
+# on_error do |exception|
+#   messenger.error(exception.to_s)
+#   exit!(1)
+#   true
+# end
 
 # ======================================================
 # Commands
@@ -171,7 +171,7 @@ command :pins do |c|
 
         # Set one option: the start date. Set it to the last-run date + 1.
         opts = {}
-        opts.merge!(fromdt: last_run_date + 1)
+        opts.merge!(fromdt: DateTime.parse(last_run_date) + 1)
         opts.merge!(PinPress.merge_common_options(options))
 
         # Request pin data from Pinboard and output the return data.
@@ -212,7 +212,7 @@ command :tags do |c|
 
         # Set one option: the start date. Set it to the last-run date + 1.
         opts = {}
-        opts.merge!(fromdt: last_run_date + 1)
+        opts.merge!(fromdt: DateTime.parse(last_run_date) + 1)
         opts.merge!(PinPress.merge_common_options(options))
 
         # Request tag data from Pinboard and output the return data.
