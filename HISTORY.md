@@ -1,3 +1,8 @@
+# 1.4.0 (2014-05-13)
+
+* Modified last_run logic to exist on each template
+* Fixed a few small bugs related to template selection
+
 # 1.3.3 (2014-05-13)
 
 * Fixed a bug with datetimestamps in `pins last` and `tags last`

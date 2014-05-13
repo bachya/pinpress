@@ -45,11 +45,10 @@ module PinPress
   def get_template(template_name, template_type)
     case template_type
     when PinPress::Template::TYPE_PIN
-      templates = configuration.pin_templates
+      configuration.pin_templates[template_name.to_sym]
     when PinPress::Template::TYPE_TAG
-      templates = configuration.tag_templates
+      configuration.tag_templates[template_name.to_sym]
     end
-    templates.find { |t| t[:name] == template_name }
   end
 
   # "Initializes" a passed template:
@@ -65,14 +64,15 @@ module PinPress
     tag_t_sym = :default_tag_template
     s = (template_type == PinPress::Template::TYPE_PIN ? pin_t_sym : tag_t_sym)
     default_template = configuration.pinpress[s]
-    if PinPress.is_template?(explicit_template, template_type)
+    
+    if explicit_template && PinPress.is_template?(explicit_template, template_type)
       messenger.debug("Using explicit template: #{ explicit_template }")
-      return PinPress.get_template(explicit_template, template_type)
+      return explicit_template, PinPress.get_template(explicit_template, template_type)
     elsif PinPress.is_template?(default_template, template_type)
       messenger.debug("Using default template: #{ default_template }")
-      return PinPress.get_template(default_template, template_type)
+      return default_template, PinPress.get_template(default_template, template_type)
     else
-      fail 'Invalid template defined and/or no default template specified'
+      fail 'Invalid template specified and/or no default template defined'
     end
   end
 
@@ -132,7 +132,7 @@ module PinPress
     when PinPress::Template::TYPE_TAG
       templates = configuration.tag_templates
     end
-    !templates.find { |t| t[:name] == template_name }.nil?
+    !templates[template_name.to_sym].nil?
   end
 
   # Present a list of installed templates to the user

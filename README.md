@@ -42,7 +42,7 @@ SYNOPSIS
     pinpress [global options] command [command options] [arguments...]
 
 VERSION
-    1.3.3
+    1.4.0
 
 GLOBAL OPTIONS
     --help    - Show this message
@@ -97,6 +97,7 @@ grab:
 
 * `-s`: the start date to use (uses [Chronic](https://github.com/mojombo/chronic "Chronic"), which allows dates like "last Tuesday")
 * `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
+* `-m`: the PinPress template to use
 * `-n`: the number of pins to return (e.g., 20)
 * `-t`: a CSV list of tags (e.g., "tag1,tag2") that must exist for the returned pins
 
@@ -156,6 +157,7 @@ based on the [Tag Template](#tag-templates "Tag Templates") provided.
 Pinpress also provides some flags that allow a user to define specific tags to
 grab:
 
+* `-m`: the PinPress template to use
 * `-s`: the start date to use (uses [Chronic](https://github.com/mojombo/chronic "Chronic"), which allows dates like "last Tuesday")
 * `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
 
@@ -210,20 +212,20 @@ config file -- as an example:
 
 ```yaml
 pin_templates:
-- name: pinpress_default
-  opener: "<ul>\n"
-  item: >
-    <li>
-    <b><a title="<%= description %>" href="<%= href %>" target="_blank">
-    <%= description %></a>.</b>
-    <%= extended %>
-    </li>
-  closer: "</ul>"
+  pinpress_default
+    opener: "<ul>\n"
+    item: >
+      <li>
+      <b><a title="<%= description %>" href="<%= href %>" target="_blank">
+      <%= description %></a>.</b>
+      <%= extended %>
+      </li>
+    closer: "</ul>"
+  # ... other templates ...
 ```
 
 A Pin Template can have several different sub-keys:
 
-* `name` (**required**): the name of the template
 * `opener` (*optional*): the text that should exist above the pins
 * `closer` (*optional*): the text that should exist below the pins
 * `item` (**required**): the formatted text that should be output for every pin
@@ -247,7 +249,7 @@ filled by a pin's values:
 Pin Templates can be used in two ways: they can either be called dynamically:
 
 ```bash
-$ pinpress pins template_name
+$ pinpress pins -m template_name
 ```
 
 ...or a default template can be specified in `~/.pinpress`:
@@ -259,15 +261,16 @@ pinpress:
   default_pin_template: pinpress_default
   # ... other keys ...
 pin_templates:
-- name: pinpress_default
-  opener: "<ul>\n"
-  item: >
-    <li>
-    <b><a href="<%= href %>">
-    <%= description %></a>.</b>
-    <%= extended %>
-    </li>
-  closer: "</ul>"
+  pinpress_default
+    opener: "<ul>\n"
+    item: >
+      <li>
+      <b><a title="<%= description %>" href="<%= href %>" target="_blank">
+      <%= description %></a>.</b>
+      <%= extended %>
+      </li>
+    closer: "</ul>"
+  # ... other templates ...
 ```
 
 So, knowing the above, both:
@@ -279,7 +282,7 @@ $ pinpress pins
 ...and:
 
 ```bash
-$ pinpress pins pinpress_default
+$ pinpress pins -m pinpress_default
 ```
 
 ...will output pin data in the format specified by that template:
@@ -312,13 +315,12 @@ They, too, are defined in `~/.pinpress`:
 
 ```yaml
 tag_templates:
-- name: pinpress_default
-  item: "<%= tag %> (<%= count %>),"
+  pinpress_default
+    item: "<%= tag %> (<%= count %>),"
 ```
 
 A Tag Template makes use of the same sub-keys as Pin Template:
 
-* `name` (**required**): the name of the template
 * `opener` (*optional*): the text that should exist above the tag string
 * `closer` (*optional*): the text that should exist below the tag string
 * `item` (**required**): the formatted text that should be output for every tag
@@ -336,7 +338,7 @@ range used)
 Pin Templates can be used in two ways: they can either be called dynamically:
 
 ```bash
-$ pinpress tags template_name
+$ pinpress tags -m template_name
 ```
 
 ...or a default template can be specified in `~/.pinpress`:
@@ -350,8 +352,9 @@ pinpress:
 pin_templates:
   # ... other keys ...
 tag_templates:
-- name: pinpress_default
-  item: "<%= tag %> (<%= count %>),"
+  pinpress_default
+    item: "<%= tag %> (<%= count %>),"
+  # ... other templates ...
 ```
 
 So, knowing the above, both:
@@ -363,7 +366,7 @@ $ pinpress tags
 ...and:
 
 ```bash
-$ pinpress tags pinpress_default
+$ pinpress tags -m pinpress_default
 ```
 
 ...will output tag data in the format specified by that template:
@@ -420,35 +423,33 @@ pinpress:
   log_level: WARN
   version: 1.1.1
   api_token: bachya:1234567890987654321
-  last_pins_run: 2014-04-29
-  last_tags_run: 2014-04-29
 pin_templates:
-- name: pinpress_default
-  opener: >
-    <em>The weekly Link Mash is a curated selection of tools, stories, and
-    other links that I found during my travels on the web. All of my curated
-    links can be found on <a title="Bachya's Pinboard: Link Mash"
-    href="https://pinboard.in/u:bachya/t:link-mash/" target="_blank">
-    my Pinboard</a>; you can also find the Link Mash archives <a
-    href="http://www.bachyaproductions.com/tag/link-mash/">here</a>.
-    </em>
-    <ul>
-  item: >
-    <li>
-    <b><a title="<%= description %>" href="<%= href %>" target="_blank">
-    <%= description %></a>.</b>
-    <%= extended %>
-    </li>
-  closer: >
-    </ul>
-    <hr/>
-    <em>This Link Mash was generated by <a title="PinPress"
-    href="https://github.com/bachya/pinpress" target="_blank">PinPress</a>,
-    a simple tool to generate text templates from <a title="Pinboard"
-    href="https://pinboard.in" target="_blank">Pinboard</a> data.</em>"
+  pinpress_default
+    opener: >
+      <em>The weekly Link Mash is a curated selection of tools, stories, and
+      other links that I found during my travels on the web. All of my curated
+      links can be found on <a title="Bachya's Pinboard: Link Mash"
+      href="https://pinboard.in/u:bachya/t:link-mash/" target="_blank">
+      my Pinboard</a>; you can also find the Link Mash archives <a
+      href="http://www.bachyaproductions.com/tag/link-mash/">here</a>.
+      </em>
+      <ul>
+    item: >
+      <li>
+      <b><a title="<%= description %>" href="<%= href %>" target="_blank">
+      <%= description %></a>.</b>
+      <%= extended %>
+      </li>
+    closer: >
+     </ul>
+     <hr/>
+     <em>This Link Mash was generated by <a title="PinPress"
+     href="https://github.com/bachya/pinpress" target="_blank">PinPress</a>,
+     a simple tool to generate text templates from <a title="Pinboard"
+     href="https://pinboard.in" target="_blank">Pinboard</a> data.</em>"
 tag_templates:
-- name: pinpress_default
-  item: "<%= tag %>,"
+  pinpress_default
+    item: "<%= tag %>,"
 ```
 
 # Known Issues & Future Releases

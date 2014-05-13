@@ -92,11 +92,11 @@ end
 # ======================================================
 # Error (runs when an exception is raised)
 # ======================================================
-# on_error do |exception|
-#   messenger.error(exception.to_s)
-#   exit!(1)
-#   true
-# end
+on_error do |exception|
+  messenger.error(exception.to_s)
+  exit!(1)
+  true
+end
 
 # ======================================================
 # Commands
@@ -130,6 +130,7 @@ end
 desc 'Get pins from Pinboard'
 command :pins do |c|
   c.flag([:e], desc: 'The end date to pull pins to')
+  c.flag([:m], desc: 'The pin template to use')
   c.flag([:n], desc: 'The number of results to return')
   c.flag([:s], desc: 'The start date to pull pins from')
   c.flag([:t], desc: 'The tags to use (e.g., "ruby,pinboard")')
@@ -140,7 +141,7 @@ command :pins do |c|
 
     # Figure out the template to use based on the passed argument (if any)
     # and/or the presence of a default template.
-    template = PinPress.init_template(args[0], PinPress::Template::TYPE_PIN)
+    template_name, template = PinPress.init_template(options[:m], PinPress::Template::TYPE_PIN)
 
     # Assuming a valid template is found, transform CLI flags into options for
     # the Pinboard gem.
@@ -154,7 +155,7 @@ command :pins do |c|
     puts output if output
 
     # Save the last-run date to the configuration file.
-    configuration.pinpress.last_pins_run = Time.now.utc.iso8601
+    configuration.pin_templates[template_name.to_sym].last_run = Time.now.utc.iso8601
     configuration.save
   end
 
@@ -163,12 +164,12 @@ command :pins do |c|
     last.action do |global_options, options, args|
       PinPress.verbose = global_options[:v]
 
-      last_run_date = configuration.pinpress.last_pins_run
-      if last_run_date
-        # Figure out the template to use based on the passed argument (if any)
-        # and/or the presence of a default template.
-        template = PinPress.init_template(args[0], PinPress::Template::TYPE_PIN)
+      # Figure out the template to use based on the passed argument (if any)
+      # and/or the presence of a default template.
+      template_name, template = PinPress.init_template(options[:m], PinPress::Template::TYPE_PIN)
 
+      last_run_date = configuration.pin_templates[template_name.to_sym].last_run
+      if last_run_date
         # Set one option: the start date. Set it to the last-run date + 1.
         opts = {}
         opts.merge!(fromdt: DateTime.parse(last_run_date) + 1)
@@ -179,7 +180,7 @@ command :pins do |c|
         puts output if output
 
         # Save the last-run date to the configuration file.
-        configuration.pinpress.last_pins_run = Time.now.utc.iso8601
+        configuration.pin_templates[template_name.to_sym].last_run = Time.now.utc.iso8601
         configuration.save
       else
         messenger.warn("`pinpress pins` hasn't been run before.")
@@ -196,37 +197,9 @@ end
 desc 'Get tags from Pinboard'
 command :tags do |c|
   c.flag([:e], desc: 'The end date to pull pins to')
+  c.flag([:m], desc: 'The template to use')
   c.flag([:t], desc: 'The tags to use (e.g., "ruby,pinboard")')
   c.flag([:s], desc: 'The start date to pull pins from')
-
-  c.desc 'Gets all tags from the last run date + 1'
-  c.command :last do |last|
-    last.action do |global_options, options, args|
-      last_run_date = configuration.pinpress.last_tags_run
-      if last_run_date
-        PinPress.verbose = global_options[:v]
-
-        # Figure out the template to use based on the passed argument (if any)
-        # and/or the presence of a default template.
-        template = PinPress.init_template(args[0], PinPress::Template::TYPE_TAG)
-
-        # Set one option: the start date. Set it to the last-run date + 1.
-        opts = {}
-        opts.merge!(fromdt: DateTime.parse(last_run_date) + 1)
-        opts.merge!(PinPress.merge_common_options(options))
-
-        # Request tag data from Pinboard and output the return data.
-        output = PinPress.tag_yield(template, opts)
-        puts output if output
-
-        # Save the last-run date to the configuration file.
-        configuration.pinpress.last_tags_run = Time.now.utc.iso8601
-        configuration.save
-      else
-        messenger.warn("`pinpress tags` hasn't been run before.")
-      end
-    end
-  end
 
   c.desc 'Gets unique tags based on the passed criteria'
   c.action do |global_options, options, args|
@@ -234,7 +207,7 @@ command :tags do |c|
 
     # Figure out the template to use based on the passed argument (if any)
     # and/or the presence of a default template.
-    template = PinPress.init_template(args[0], PinPress::Template::TYPE_TAG)
+    template_name, template = PinPress.init_template(options[:m], PinPress::Template::TYPE_TAG)
 
     # Assuming a valid template is found, transform CLI flags into options for
     # the Pinboard gem.
@@ -248,8 +221,37 @@ command :tags do |c|
     puts output if output
 
     # Save the last-run date to the configuration file.
-    configuration.pinpress.last_tags_run = Time.now.utc.iso8601
+    configuration.tag_templates[template_name.to_sym].last_run = Time.now.utc.iso8601
     configuration.save
+  end
+
+  c.desc 'Gets all tags from the last run date + 1'
+  c.command :last do |last|
+    last.action do |global_options, options, args|
+      # Figure out the template to use based on the passed argument (if any)
+      # and/or the presence of a default template.
+      template_name, template = PinPress.init_template(options[:m], PinPress::Template::TYPE_TAG)
+
+      last_run_date = configuration.tag_templates[template_name.to_sym].last_run
+      if last_run_date
+        PinPress.verbose = global_options[:v]
+
+        # Set one option: the start date. Set it to the last-run date + 1.
+        opts = {}
+        opts.merge!(fromdt: DateTime.parse(last_run_date) + 1)
+        opts.merge!(PinPress.merge_common_options(options))
+
+        # Request tag data from Pinboard and output the return data.
+        output = PinPress.tag_yield(template, opts)
+        puts output if output
+
+        # Save the last-run date to the configuration file.
+        configuration.tag_templates[template_name.to_sym].last_run = Time.now.utc.iso8601
+        configuration.save
+      else
+        messenger.warn("`pinpress tags` hasn't been run before.")
+      end
+    end
   end
 end
 
