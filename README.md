@@ -422,7 +422,7 @@ pinpress:
   default_tags: ['link-mash']
   ignored_tags: ['buffer']
   log_level: WARN
-  version: 1.1.1
+  version: 1.4.0
   api_token: bachya:1234567890987654321
 pin_templates:
   pinpress_default
