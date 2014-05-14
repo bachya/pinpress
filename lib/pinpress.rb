@@ -45,9 +45,9 @@ module PinPress
   def get_template(template_name, template_type)
     case template_type
     when PinPress::Template::TYPE_PIN
-      configuration.pin_templates[template_name.to_sym]
+      configuration.pin_templates.find { |t| t.keys[0] == template_name.to_sym}.values[0]
     when PinPress::Template::TYPE_TAG
-      configuration.tag_templates[template_name.to_sym]
+      configuration.tag_templates.find { |t| t.keys[0] == template_name.to_sym}.values[0]
     end
   end
 
@@ -132,7 +132,7 @@ module PinPress
     when PinPress::Template::TYPE_TAG
       templates = configuration.tag_templates
     end
-    !templates[template_name.to_sym].nil?
+    !templates.find { |t| t.keys[0] == template_name.to_sym }.nil?
   end
 
   # Present a list of installed templates to the user
@@ -143,8 +143,10 @@ module PinPress
 
     messenger.section('AVAILABLE PIN TEMPLATES:')
     if pin_templates
+      # pin_templates.each_with_index do |template, index|
       pin_templates.each_with_index do |template, index|
-        puts "#{ index + 1 }.\tName:   ".blue + "#{ template[:name] }"
+        template_name, template = template.first 
+        puts "#{ index + 1 }.\tName:   ".blue + "#{ template_name }"
         puts "Opener:".blue.rjust(22) + "\t#{ template[:opener] }".truncate(80)
         puts "Item:".blue.rjust(22) + "\t#{ template[:item] }".truncate(80)
         puts "Closer:".blue.rjust(22) + "\t#{ template[:closer] }".truncate(80)
@@ -156,7 +158,8 @@ module PinPress
     messenger.section('AVAILABLE TAG TEMPLATES:')
     if tag_templates
       tag_templates.each_with_index do |template, index|
-        puts "#{ index + 1 }.\tName:   ".blue + "#{ template[:name] }"
+        template_name, template = template.first
+        puts "#{ index + 1 }.\tName:   ".blue + "#{ template_name }"
         puts "Opener:".blue.rjust(22) + "\t#{ template[:opener] }".truncate(80)
         puts "Item:".blue.rjust(22) + "\t#{ template[:item] }".truncate(80)
         puts "Closer:".blue.rjust(22) + "\t#{ template[:closer] }".truncate(80)

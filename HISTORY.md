@@ -1,3 +1,7 @@
+# 1.4.1 (2014-05-13)
+
+* Fixed a bug with displaying templates
+
 # 1.4.0 (2014-05-13)
 
 * Modified last_run logic to exist on each template
