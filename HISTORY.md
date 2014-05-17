@@ -1,3 +1,7 @@
+# 1.4.2 (2014-05-16)
+
+* Some small refactorings
+
 # 1.4.1 (2014-05-13)
 
 * Fixed a bug with displaying templates

@@ -138,34 +138,20 @@ module PinPress
   # Present a list of installed templates to the user
   # @return [void]
   def list_templates
-    pin_templates = configuration.pin_templates
-    tag_templates = configuration.tag_templates
-
-    messenger.section('AVAILABLE PIN TEMPLATES:')
-    if pin_templates
-      # pin_templates.each_with_index do |template, index|
-      pin_templates.each_with_index do |template, index|
-        template_name, template = template.first 
-        puts "#{ index + 1 }.\tName:   ".blue + "#{ template_name }"
-        puts "Opener:".blue.rjust(22) + "\t#{ template[:opener] }".truncate(80)
-        puts "Item:".blue.rjust(22) + "\t#{ template[:item] }".truncate(80)
-        puts "Closer:".blue.rjust(22) + "\t#{ template[:closer] }".truncate(80)
+    %w(pin tag).each do |type|
+      templates = configuration.send("#{ type }_templates")
+      messenger.section("AVAILABLE #{ type.upcase } TEMPLATES:")
+      if templates
+        templates.each_with_index do |template, index|
+          template_name, template = template.first
+           puts "#{ index + 1 }.\tName:   ".blue + "#{ template_name }"
+           puts "Opener:".blue.rjust(22) + "\t#{ template[:opener] }".truncate(80)
+           puts "Item:".blue.rjust(22) + "\t#{ template[:item] }".truncate(80)
+           puts "Closer:".blue.rjust(22) + "\t#{ template[:closer] }".truncate(80)
+        end
+      else
+        messenger.warn('No templates defined...')
       end
-    else
-      messenger.warn('No templates defined...')
-    end
-
-    messenger.section('AVAILABLE TAG TEMPLATES:')
-    if tag_templates
-      tag_templates.each_with_index do |template, index|
-        template_name, template = template.first
-        puts "#{ index + 1 }.\tName:   ".blue + "#{ template_name }"
-        puts "Opener:".blue.rjust(22) + "\t#{ template[:opener] }".truncate(80)
-        puts "Item:".blue.rjust(22) + "\t#{ template[:item] }".truncate(80)
-        puts "Closer:".blue.rjust(22) + "\t#{ template[:closer] }".truncate(80)
-      end
-    else
-      messenger.warn('No templates defined...')
     end
   end
 
