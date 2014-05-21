@@ -1,3 +1,9 @@
+# 1.5.0 (2014-05-21)
+
+* Applied default tags and ignored tags to templates, rather than globally
+* `last` commands will run every time, even if they've never run before
+* Small refactorings
+
 # 1.4.2 (2014-05-16)
 
 * Some small refactorings

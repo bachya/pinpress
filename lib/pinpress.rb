@@ -159,18 +159,25 @@ module PinPress
   # and tag requests.
   # @param [Hash] options
   # @return [Hash]
-  def merge_common_options(options)
+  def merge_common_options(options, template_name, template_type)
+    case template_type
+    when PinPress::Template::TYPE_PIN
+      section = configuration.pin_templates.find { |t| t.keys[0] == template_name.to_sym}.values[0]
+    when PinPress::Template::TYPE_TAG
+      section = configuration.tag_templates.find { |t| t.keys[0] == template_name.to_sym}.values[0]
+    end
+
     opts = {}
     if options[:n]
       opts.merge!(results: options[:n])
-    elsif configuration.pinpress.default_num_results
-      opts.merge!(results: configuration.pinpress.default_num_results)
+    elsif section.default_num_results
+      opts.merge!(results: section.default_num_results)
     end
 
     if options[:t]
       opts.merge!(tag: options[:t])
-    elsif configuration.pinpress.default_tags
-      opts.merge!(tag: configuration.pinpress.default_tags.join(','))
+    elsif section.default_tags
+      opts.merge!(tag: section.default_tags.join(','))
     end
     opts
   end

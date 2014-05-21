@@ -148,7 +148,7 @@ command :pins do |c|
     opts = {}
     opts.merge!(todt: Chronic.parse(options[:e])) if options[:e]
     opts.merge!(fromdt: Chronic.parse(options[:s])) if options[:s]
-    opts.merge!(PinPress.merge_common_options(options))
+    opts.merge!(PinPress.merge_common_options(options, template_name, PinPress::Template::TYPE_PIN))
 
     # Request pin data from Pinboard and output the return data.
     output = PinPress.pin_yield(template, opts)
@@ -168,24 +168,25 @@ command :pins do |c|
       # and/or the presence of a default template.
       template_name, template = PinPress.init_template(options[:m], PinPress::Template::TYPE_PIN)
 
+      opts = {}
+
       last_run_date = configuration.pin_templates.find { |t| t.keys[0] == template_name.to_sym }.values[0].last_run
       if last_run_date
         # Set one option: the start date. Set it to the last-run date + 1.
-        opts = {}
         opts.merge!(fromdt: DateTime.parse(last_run_date) + 1)
-        opts.merge!(PinPress.merge_common_options(options))
-
-        # Request pin data from Pinboard and output the return data.
-        output = PinPress.pin_yield(template, opts)
-        puts output if output
-
-        # Save the last-run date to the configuration file.
-       configuration.pin_templates.find { |t| t.keys[0] == template_name.to_sym}.values[0].last_run = Time.now.utc.iso8601
-       configuration.save
-      else
-        messenger.warn("`pinpress pins` hasn't been run before.")
       end
-    end
+
+      # Set our common options.
+      opts.merge!(PinPress.merge_common_options(options, template_name, PinPress::Template::TYPE_PIN))
+
+      # Request pin data from Pinboard and output the return data.
+      output = PinPress.pin_yield(template, opts)
+      puts output if output
+
+      # Save the last-run date to the configuration file.
+      configuration.pin_templates.find { |t| t.keys[0] == template_name.to_sym}.values[0].last_run = Time.now.utc.iso8601
+      configuration.save
+   end
   end
 end
 
@@ -214,7 +215,7 @@ command :tags do |c|
     opts = {}
     opts.merge!(todt: Chronic.parse(options[:e])) if options[:e]
     opts.merge!(fromdt: Chronic.parse(options[:s])) if options[:s]
-    opts.merge!(PinPress.merge_common_options(options))
+    opts.merge!(PinPress.merge_common_options(options, template_name, PinPress::Template::TYPE_PIN))
 
     # Request tag data from Pinboard and output the return data.
     output = PinPress.tag_yield(template, opts)
@@ -233,27 +234,28 @@ command :tags do |c|
       # and/or the presence of a default template.
       template_name, template = PinPress.init_template(options[:m], PinPress::Template::TYPE_TAG)
 
+      opts = {}
+
       last_run_date = configuration.tag_templates.find { |t| t.keys[0] == template_name.to_sym }.values[0].last_run
       if last_run_date
         PinPress.verbose = global_options[:v]
 
         # Set one option: the start date. Set it to the last-run date + 1.
-        opts = {}
         opts.merge!(fromdt: DateTime.parse(last_run_date) + 1)
-        opts.merge!(PinPress.merge_common_options(options))
-
-        # Request tag data from Pinboard and output the return data.
-        output = PinPress.tag_yield(template, opts)
-        puts output if output
-
-        # Save the last-run date to the configuration file.
-        t_config = configuration.tag_templates.find { |t| t.keys[0] == template_name.to_sym}.values[0]
-        t_config.last_run = Time.now.utc.iso8601
-        configuration.save
-      else
-        messenger.warn("`pinpress tags` hasn't been run before.")
       end
-    end
+ 
+      # Set our common options.
+      opts.merge!(PinPress.merge_common_options(options, template_name, PinPress::Template::TYPE_PIN))
+      
+      # Request tag data from Pinboard and output the return data.
+      output = PinPress.tag_yield(template, opts)
+      puts output if output
+
+      # Save the last-run date to the configuration file.
+      t_config = configuration.tag_templates.find { |t| t.keys[0] == template_name.to_sym}.values[0]
+      t_config.last_run = Time.now.utc.iso8601
+      configuration.save
+   end
   end
 end
 
