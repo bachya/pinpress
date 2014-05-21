@@ -383,14 +383,14 @@ link-mash (15),app (2),ios (3),productivity (1),launch-center-pro (1),drafts (2)
 You can place special keys in the `pinpress` section of `~/.pinpress` to
 automate some actions:
 
-#```yaml
+```yaml
 pinpress:
   # ...other keys...
 
-  # The default `pins` template to use
+  # The default pins template to use
   default_pin_template
 
-  # The default `tags` template to use
+  # The default tags template to use
   default_tag_template
 
   # ...other keys...
