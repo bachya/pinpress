@@ -1,3 +1,7 @@
+# 1.5.1 (2014-05-27)
+
+* Fixed a bug with grabbing ignored tags from individual tag templates  
+
 # 1.5.0 (2014-05-21)
 
 * Applied default tags and ignored tags to templates, rather than globally

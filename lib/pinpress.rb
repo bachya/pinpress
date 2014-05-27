@@ -216,10 +216,8 @@ module PinPress
     output = ''
     PinPress.execute_template(opts) do |data|
       tags = []
-      ignored_tags = configuration.pinpress.ignored_tags
-
       data.each { |i| tags += i[:tag] }
-      tags = (tags -= ignored_tags if ignored_tags).uniq.map do |t|
+      tags = (tags -= template.ignored_tags if template.ignored_tags).uniq.map do |t|
         { tag: t, count: tags.count(t) }
       end
 
