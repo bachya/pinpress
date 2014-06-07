@@ -243,10 +243,10 @@ command :tags do |c|
         # Set one option: the start date. Set it to the last-run date + 1.
         opts.merge!(fromdt: DateTime.parse(last_run_date) + 1)
       end
- 
+
       # Set our common options.
       opts.merge!(PinPress.merge_common_options(options, template_name, PinPress::Template::TYPE_PIN))
-      
+
       # Request tag data from Pinboard and output the return data.
       output = PinPress.tag_yield(template, opts)
       puts output if output

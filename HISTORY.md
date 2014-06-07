@@ -1,6 +1,10 @@
+# 1.5.2 (2014-06-07)
+
+* Fixed a small bug with running `tags last`
+
 # 1.5.1 (2014-05-27)
 
-* Fixed a bug with grabbing ignored tags from individual tag templates  
+* Fixed a bug with grabbing ignored tags from individual tag templates
 
 # 1.5.0 (2014-05-21)
 

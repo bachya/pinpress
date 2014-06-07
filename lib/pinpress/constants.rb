@@ -28,5 +28,5 @@ module PinPress
   SUMMARY = 'A simple CLI to create HTML templates of Pinboard data.'
 
   # The Gem's version
-  VERSION = '1.5.1'
+  VERSION = '1.5.2'
 end

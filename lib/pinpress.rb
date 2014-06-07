@@ -64,7 +64,7 @@ module PinPress
     tag_t_sym = :default_tag_template
     s = (template_type == PinPress::Template::TYPE_PIN ? pin_t_sym : tag_t_sym)
     default_template = configuration.pinpress[s]
-    
+
     if explicit_template && PinPress.is_template?(explicit_template, template_type)
       messenger.debug("Using explicit template: #{ explicit_template }")
       return explicit_template, PinPress.get_template(explicit_template, template_type)
@@ -217,7 +217,7 @@ module PinPress
     PinPress.execute_template(opts) do |data|
       tags = []
       data.each { |i| tags += i[:tag] }
-      tags = (tags -= template.ignored_tags if template.ignored_tags).uniq.map do |t|
+      tags = tags.uniq.map do |t|
         { tag: t, count: tags.count(t) }
       end
 
