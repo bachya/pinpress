@@ -401,6 +401,25 @@ instead:
 ...this is some text with a URL: <a href="http://www.google.com" target="_blank">http://www.google.com</a>.
 ```
 
+Finally, this link gets stored in `~/.pinpress`:
+
+```yaml
+links:
+  # This ID is a combination of the URL
+  # and the pin in which it is found.
+  853d65b7e76a57955040e97902fc2b3c:
+    title: GIF YouTube
+    url: http://www.google.com
+    link_text: http://www.google.com
+```
+
+This happens for two reasons:
+
+1. Going forward, any request that returns this pin will use the data found
+in `~/.pinpress` (so that it doesn't have to be recalculated).
+2. If you want to modify the text that gets used for this link in this pin,
+you can do it here.
+
 # Other Configuration Options
 
 ## Global Keys
