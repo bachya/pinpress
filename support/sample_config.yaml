@@ -13,3 +13,4 @@ pin_templates:
 tag_templates:
 - name: pinpress_default
   item: "<%= tag %> (<%= count %>),"
+links: {}
