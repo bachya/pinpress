@@ -42,7 +42,7 @@ SYNOPSIS
     pinpress [global options] command [command options] [arguments...]
 
 VERSION
-    1.5.2
+    1.6.0
 
 GLOBAL OPTIONS
     --help    - Show this message
@@ -68,11 +68,18 @@ SYNOPSIS
     pinpress [global options] pins [command options]
 
 COMMAND OPTIONS
+    -a     - Auto-links any URLs found in a pin description
+    -c     - Copy final output to the system clipboard
     -e arg - The end date to pull pins to (default: none)
+    l      - Allows the user to create <a> links around detected URLs
     -m arg - The pin template to use (default: none)
     -n arg - The number of results to return (default: none)
     -s arg - The start date to pull pins from (default: none)
     -t arg - The tags to use (e.g., "ruby,pinboard") (default: none)
+
+COMMANDS
+    <default> -
+    last      - Gets all pins from the last run date + 1
 ```
 
 # Initialization
@@ -101,6 +108,9 @@ grab:
 * `-m`: the PinPress template to use
 * `-n`: the number of pins to return (e.g., 20)
 * `-t`: a CSV list of tags (e.g., "tag1,tag2") that must exist for the returned pins
+
+By default, pin template text will be output to the terminal; you can use the
+`-c` switch to output it to the system clipboard instead.
 
 ## Getting Pins From a Date Forward
 
@@ -161,6 +171,9 @@ grab:
 * `-m`: the PinPress template to use
 * `-s`: the start date to use (uses [Chronic](https://github.com/mojombo/chronic "Chronic"), which allows dates like "last Tuesday")
 * `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
+
+By default, pin template text will be output to the terminal; you can use the
+`-c` switch to output it to the system clipboard instead.
 
 ## Getting Tags From a Date Forward
 
@@ -385,6 +398,23 @@ this: automatic linking and manual linking.
 
 ## Automatic URL Linking
 
+### Using It
+
+To use automatic linking, simply use the `-a` switch when running PinPress.
+
+Alternatively, to always use automatic linking, include a `auto_link` key/value
+in `~/.pinpress`:
+
+```yaml
+pinpress:
+  auto_link: true
+```
+
+Note that the `auto_link` configuration key can be overridden by using a different
+URL linking switch (such as `-l`).
+
+### How It Works
+
 Using this method, PinPress will scan each pin that is being requested for URLs.
 Upon finding a URL, PinPress will automatically wrap it in an `<a>` tag.
 
@@ -408,7 +438,7 @@ links:
   # This ID is a combination of the URL
   # and the pin in which it is found.
   853d65b7e76a57955040e97902fc2b3c:
-    title: GIF YouTube
+    title: Pin with Google
     url: http://www.google.com
     link_text: http://www.google.com
 ```
@@ -419,6 +449,44 @@ This happens for two reasons:
 in `~/.pinpress` (so that it doesn't have to be recalculated).
 2. If you want to modify the text that gets used for this link in this pin,
 you can do it here.
+
+## Manual URL Linking
+
+### Using It
+
+To use automatic linking, simply use the `-l` switch when running PinPress.
+
+Alternatively, to always use automatic linking, include a `manual_link` key/value
+in `~/.pinpress`:
+
+```yaml
+pinpress:
+  manual_link: true
+```
+
+Note that the `manual_link` configuration key can be overridden by using a different
+URL linking switch (such as `-a`).
+
+### How It Works
+
+This method is similar to automatic linking in that it will search each pin in the
+output for URLs in its description. When found, the user is prompted to enter the
+text that will create the link.
+
+For example, given a description that looks like this:
+
+```html
+Check out https://gifyoutube.com/!
+```
+
+...imagine that the user types in `GIF Youtube`; the result will look like this:
+
+```html
+Check out <a href="https://gifyoutube.com/" target="_blank">GIF Youtube</a>!
+```
+
+Like automatic linking, the results of this URL/pin combo are stored in
+`~/.pinpress` for easy lookup and future editing.
 
 # Other Configuration Options
 
@@ -432,10 +500,20 @@ pinpress:
   # ...other keys...
 
   # The default pins template to use
-  default_pin_template
+  default_pin_template: template_name
 
   # The default tags template to use
-  default_tag_template
+  default_tag_template: template_name
+
+  # Automatic URL linking; note that this
+  # cannot exist eat the same time as manual
+  # URL linking
+  auto_link: true
+
+  # Manual URL linking; note that this
+  # cannot exist eat the same time as auto
+  # URL linking
+  manual_link: true
 
   # ...other keys...
 ```
@@ -478,8 +556,9 @@ pinpress:
   default_pin_template: pinpress_default
   default_tag_template: pinpress_default
   log_level: WARN
-  version: 1.5.0
+  version: 1.6.0
   api_token: bachya:1234567890987654321
+  manual_link: true
 pin_templates:
 - pinpress_default:
     opener: |
