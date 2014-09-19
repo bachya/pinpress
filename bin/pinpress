@@ -32,10 +32,12 @@
 #--------------------------------------------------------------------
 require 'chronic'
 require 'cliutils'
+require 'digest/md5'
 require 'gli'
 require 'htmlentities'
 require 'pinboard'
 require 'pinpress'
+require 'uri'
 
 include CLIUtils::Configuration
 include CLIUtils::Messaging
@@ -134,6 +136,10 @@ command :pins do |c|
   c.flag([:n], desc: 'The number of results to return')
   c.flag([:s], desc: 'The start date to pull pins from')
   c.flag([:t], desc: 'The tags to use (e.g., "ruby,pinboard")')
+
+  c.switch([:a], desc: 'Auto-links an URLs found in a pin description')
+  c.switch([:c], desc: 'Copy final output to the system clipboard')
+  c.switch([:l], desc: 'Allows the user to create <a> links around detected URLs')
 
   c.desc 'Gets pins from Pinboard'
   c.action do |global_options, options, args|

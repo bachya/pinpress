@@ -1,3 +1,9 @@
+# 1.6.0 (2014-09-15)
+
+* Added `-a` flag to automatically create hyperlinks from URLs in pin descriptions
+* Added `-l` flag to prompt user to build hyperlinks around URLs in pin descriptions
+* Added `-c` flag to automatically copy output to system clipboard
+
 # 1.5.2 (2014-06-07)
 
 * Fixed a small bug with running `tags last`

@@ -16,6 +16,38 @@ module PinPress
     attr_accessor :verbose
   end
 
+  # Determines whether an invalid combination of linking options
+  # (auto and manual, via either a switch or a config parameter)
+  # has been given.
+  # @param [Hash] opts
+  # @return [Bool]
+  def conflicting_link_opts?(opts)
+    auto_link_flag = opts[:a]
+    auto_link_conf = configuration.pinpress.auto_link
+    manual_link_flag = opts[:l]
+    manual_link_conf = configuration.pinpress.manual_link
+    ((auto_link_conf && manual_link_conf) || (auto_link_flag && manual_link_flag))
+  end
+
+  # Determines which URL linking options to set. There are some
+  # basic rules:
+  #    1. You can't specify both switches or both config options simultaneously.
+  #    2. Switches will take priority.
+  #    3. Config options are a last resort
+  # @param [Hash] opts_hash
+  # @return [Hash]
+  def determine_link_opts(opts_hash)
+    opts = {}
+    if opts_hash[:a_switch] || opts_hash[:m_switch]
+      opts.merge!(auto_link: true) if opts_hash[:a_switch]
+      opts.merge!(link: true) if opts_hash[:m_switch]
+    else
+      opts.merge!(auto_link: true) if opts_hash[:a_config]
+      opts.merge!(link: true) if opts_hash[:m_config]
+    end
+    opts
+  end
+
   # Grabs Pinboard data (passed on passed options) and yields a block that
   # allows the user to act upon that returned data.
   # @param [Hash] pinboard_opts
@@ -34,7 +66,7 @@ module PinPress
       messenger.debug(e.to_s)
       puts e.to_s
       raise "Pinboard API failed; are you sure you've run " \
-           " `pinpress init` (and that your API key is correct)?"
+        " `pinpress init` (and that your API key is correct)?"
     end
   end
 
@@ -87,6 +119,7 @@ module PinPress
 
       # Add initial configuration info.
       configuration.add_section(:pinpress)
+      configuration.add_section(:links)
       configuration.pinpress = {
         config_location: configuration.config_path,
         default_pin_template: 'pinpress_default',
@@ -135,6 +168,54 @@ module PinPress
     !templates.find { |t| t.keys[0] == template_name.to_sym }.nil?
   end
 
+  def link_urls_in_desc(name, description, method)
+    fail "Unknown link creation methdo: #{ method.to_s }" unless [:AUTO, :MANUAL].include? method
+    urls = URI.extract(description, ['http', 'https'])
+    urls.each do |u|
+      link_text = ''
+      pin_id = Digest::MD5.hexdigest(description + u)
+
+      # I don't get why, but URL.extract is loose enough to include
+      # weird characters. This is my evolving regex to handle those.
+      u.sub!(/[()\.]+$/, '')
+
+      if configuration.links.send(pin_id)
+        # First, check the configuration file to see if we've stored
+        # this URL before (so that we can grab the saved value).
+        link_text = configuration.links.send(pin_id).link_text
+      else
+        if method == :AUTO
+          # If the configuration file doesn't have an entry for this
+          # link, no worries; create one.
+          link_text = u
+        elsif method == :MANUAL
+          # If the configuration file doesn't have an entry for this
+          # link, no worries; create one.
+          CLIUtils::PrettyIO.wrap = false
+          messenger.section('URL FOUND!')
+          messenger.info("URL:\t\t#{ u }")
+          messenger.info("TITLE:\t#{ name }")
+          messenger.info("POSITION:\t..." + description.scan(/.{0,40}#{ u }.{0,40}/)[0] + '...')
+          until !link_text.nil?
+            link_text = messenger.prompt('What do you want the link text to say?')
+            messenger.warn('Please provide some link text.') if link_text.nil?
+          end
+          CLIUtils::PrettyIO.wrap = true
+        end
+
+        # Store this newly created link info back in the configuration
+        # file.
+        configuration.links.merge!(pin_id => {
+          title: name,
+          url: u,
+          link_text: link_text
+        })
+      end
+      description.sub!(u, "<a href=\"#{ u }\" target=\"_blank\">#{ link_text }</a>")
+    end
+    description
+  end
+
   # Present a list of installed templates to the user
   # @return [void]
   def list_templates
@@ -144,10 +225,10 @@ module PinPress
       if templates
         templates.each_with_index do |template, index|
           template_name, template = template.first
-           puts "#{ index + 1 }.\tName:   ".blue + "#{ template_name }"
-           puts "Opener:".blue.rjust(22) + "\t#{ template[:opener] }".truncate(80)
-           puts "Item:".blue.rjust(22) + "\t#{ template[:item] }".truncate(80)
-           puts "Closer:".blue.rjust(22) + "\t#{ template[:closer] }".truncate(80)
+          puts "#{ index + 1 }.\tName:   ".blue + "#{ template_name }"
+          puts "Opener:".blue.rjust(22) + "\t#{ template[:opener] }".truncate(80)
+          puts "Item:".blue.rjust(22) + "\t#{ template[:item] }".truncate(80)
+          puts "Closer:".blue.rjust(22) + "\t#{ template[:closer] }".truncate(80)
         end
       else
         messenger.warn('No templates defined...')
@@ -158,6 +239,7 @@ module PinPress
   # Helper method to merge command line options that are relevant for both pin
   # and tag requests.
   # @param [Hash] options
+  # @raise StandardError if an invalid combo of linking options is given
   # @return [Hash]
   def merge_common_options(options, template_name, template_type)
     case template_type
@@ -179,6 +261,25 @@ module PinPress
     elsif section.default_tags
       opts.merge!(tag: section.default_tags.join(','))
     end
+
+    # These options are PinPress-related, not necessarily Pinboard-related;
+    # for the sake of convenience, they're included here.
+
+    # Auto-linking and prompting for link text don't go together, so make
+    # sure to let the user know if they include both.
+    if conflicting_link_opts?(options)
+      fail "You can't specify (a) both the `-a` and `-l` switches or " \
+        "(b) both the `auto_link` and `manual_link` configuration options."
+    else
+      link_opts = determine_link_opts({
+        a_switch: options[:a],
+        m_switch: options[:l],
+        a_config: configuration.pinpress.auto_link,
+        m_config: configuration.pinpress.manual_link
+      })
+      opts.merge!(link_opts) if link_opts
+      opts.merge!(copy_to_clipboard: true) if options[:c]
+    end
     opts
   end
 
@@ -189,13 +290,21 @@ module PinPress
   def pin_yield(template, opts)
     output = ''
     PinPress.execute_template(opts) do |data|
-      html_coder = HTMLEntities.new
-
       output += template[:opener] if template[:opener]
       data.each do |i|
+        name = HTMLEntities.new.encode(i[:description])
+
+        if opts[:link]
+          desc = link_urls_in_desc(name, i[:extended], :MANUAL)
+        elsif opts[:auto_link]
+          desc = link_urls_in_desc(name, i[:extended], :AUTO)
+        else
+          desc = i[:extended]
+        end
+
         href        = i[:href]
-        description = html_coder.encode(i[:description])
-        extended    = i[:extended]
+        description = name
+        extended    = desc
         tag         = i[:tag]
         time        = i[:time]
         replace     = i[:replace]
@@ -239,8 +348,8 @@ module PinPress
   # @return [void]
   def update_config_file
     m = "This version needs to make some config changes. Don't worry; " \
-        "when prompted, your current values for existing config options " \
-        "will be presented (so it'll be easier to fly through the upgrade)."
+      "when prompted, your current values for existing config options " \
+      "will be presented (so it'll be easier to fly through the upgrade)."
     messenger.info(m)
     messenger.prompt('Press enter to continue')
     PinPress.init(true)
