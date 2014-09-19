@@ -22,5 +22,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency('cliutils', '~> 2')
   spec.add_runtime_dependency('gli', '2.9.0')
   spec.add_runtime_dependency('htmlentities', '4.3.1')
+  spec.add_runtime_dependency('pbcopy', '1.0.1')
   spec.add_runtime_dependency('pinboard', '0.1.1')
 end

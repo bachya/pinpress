@@ -172,7 +172,7 @@ module PinPress
     fail "Unknown link creation methdo: #{ method.to_s }" unless [:AUTO, :MANUAL].include? method
     urls = URI.extract(description, ['http', 'https'])
     urls.each do |u|
-      link_text = ''
+      link_text = nil
       pin_id = Digest::MD5.hexdigest(description + u)
 
       # I don't get why, but URL.extract is loose enough to include
@@ -278,7 +278,6 @@ module PinPress
         m_config: configuration.pinpress.manual_link
       })
       opts.merge!(link_opts) if link_opts
-      opts.merge!(copy_to_clipboard: true) if options[:c]
     end
     opts
   end
