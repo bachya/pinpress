@@ -376,6 +376,31 @@ $ pinpress tags -m pinpress_default
 link-mash (15),app (2),ios (3),productivity (1),launch-center-pro (1),drafts (2),
 ```
 
+# URL Linking
+
+I often run into the situation where I want to take a URL from a pin's description
+and add an `<a>` tag around it (since Pinboard doesn't allow you to embed the HTML
+within the pin description itself). PinPress provides two mechanisms to accomplish
+this: automatic linking and manual linking.
+
+## Automatic URL Linking
+
+Using this method, PinPress will scan each pin that is being requested for URLs.
+Upon finding a URL, PinPress will automatically wrap it in an `<a>` tag.
+
+For example, given a description that looks like this:
+
+```html
+...this is some text with a URL: http://www.google.com.
+```
+
+...PinPress will modify the description such that the following is output
+instead:
+
+```html
+...this is some text with a URL: <a href="http://www.google.com" target="_blank">http://www.google.com</a>.
+```
+
 # Other Configuration Options
 
 ## Global Keys
