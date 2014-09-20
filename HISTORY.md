@@ -1,3 +1,7 @@
+# 1.6.1 (2014-09-20)
+
+* Switched from [pbcopy](https://github.com/JoshCheek/pbcopy) to [clippy](https://github.com/envygeeks/clippy)
+
 # 1.6.0 (2014-09-15)
 
 * Added `-a` flag to automatically create hyperlinks from URLs in pin descriptions
