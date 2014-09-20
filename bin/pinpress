@@ -31,11 +31,11 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #--------------------------------------------------------------------
 require 'chronic'
+require 'clippy'
 require 'cliutils'
 require 'digest/md5'
 require 'gli'
 require 'htmlentities'
-require 'pbcopy'
 require 'pinboard'
 require 'pinpress'
 require 'uri'
@@ -165,7 +165,7 @@ command :pins do |c|
     # puts output if output
     if output
       if options[:c]
-        output | pbcopy
+        Clippy.copy(output)
       else
         puts output
       end
@@ -204,7 +204,7 @@ command :pins do |c|
       # puts output if output
       if output
         if options[:c]
-          output | pbcopy
+          Clippy.copy(output)
         else
           puts output
         end
@@ -252,7 +252,7 @@ command :tags do |c|
     # puts output if output
     if output
       if options[:c]
-        output | pbcopy
+        Clippy.copy(output)
       else
         puts output
       end
@@ -292,7 +292,7 @@ command :tags do |c|
       # puts output if output
       if output
         if options[:c]
-          output | pbcopy
+          Clippy.copy(output)
         else
           puts output
         end

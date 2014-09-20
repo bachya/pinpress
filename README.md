@@ -109,8 +109,13 @@ grab:
 * `-n`: the number of pins to return (e.g., 20)
 * `-t`: a CSV list of tags (e.g., "tag1,tag2") that must exist for the returned pins
 
+## Output
+
 By default, pin template text will be output to the terminal; you can use the
-`-c` switch to output it to the system clipboard instead.
+`-c` switch to output it to the system clipboard instead. This flag makes use
+of the [clippy](https://github.com/envygeeks/clippy) gem, which
+allows for cross-platform system clipboard access. Make sure you read its
+[README](https://github.com/envygeeks/clippy/blob/master/Readme.md).
 
 ## Getting Pins From a Date Forward
 
@@ -172,8 +177,13 @@ grab:
 * `-s`: the start date to use (uses [Chronic](https://github.com/mojombo/chronic "Chronic"), which allows dates like "last Tuesday")
 * `-e`: the end date to use (also uses [Chronic](https://github.com/mojombo/chronic "Chronic"))
 
+## Output
+
 By default, pin template text will be output to the terminal; you can use the
-`-c` switch to output it to the system clipboard instead.
+`-c` switch to output it to the system clipboard instead. This flag makes use
+of the [clippy](https://github.com/envygeeks/clippy) gem, which
+allows for cross-platform system clipboard access. Make sure you read its
+[README](https://github.com/envygeeks/clippy/blob/master/Readme.md).
 
 ## Getting Tags From a Date Forward
 
