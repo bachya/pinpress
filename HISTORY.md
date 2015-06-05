@@ -1,3 +1,7 @@
+# 1.6.2 (2015-06-05)
+
+* Update htmlentities gem in gemspec.
+
 # 1.6.1 (2014-09-20)
 
 * Switched from [pbcopy](https://github.com/JoshCheek/pbcopy) to [clippy](https://github.com/envygeeks/clippy)
