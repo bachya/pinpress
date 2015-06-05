@@ -42,7 +42,7 @@ SYNOPSIS
     pinpress [global options] command [command options] [arguments...]
 
 VERSION
-    1.6.0
+    1.6.3
 
 GLOBAL OPTIONS
     --help    - Show this message
@@ -236,7 +236,7 @@ config file -- as an example:
 
 ```yaml
 pin_templates:
-  pinpress_default
+- pinpress_default:
     opener: "<ul>\n"
     item: >
       <li>
@@ -245,7 +245,7 @@ pin_templates:
       <%= extended %>
       </li>
     closer: "</ul>"
-  # ... other templates ...
+# ... other templates ...
 ```
 
 A Pin Template can have several different sub-keys:
@@ -285,7 +285,7 @@ pinpress:
   default_pin_template: pinpress_default
   # ... other keys ...
 pin_templates:
-  pinpress_default
+- pinpress_default:
     opener: "<ul>\n"
     item: >
       <li>
@@ -294,7 +294,7 @@ pin_templates:
       <%= extended %>
       </li>
     closer: "</ul>"
-  # ... other templates ...
+# ... other templates ...
 ```
 
 So, knowing the above, both:
@@ -339,7 +339,7 @@ They, too, are defined in `~/.pinpress`:
 
 ```yaml
 tag_templates:
-  pinpress_default
+- pinpress_default:
     item: "<%= tag %> (<%= count %>),"
 ```
 
@@ -376,9 +376,8 @@ pinpress:
 pin_templates:
   # ... other keys ...
 tag_templates:
-  pinpress_default
-    item: "<%= tag %> (<%= count %>),"
-  # ... other templates ...
+  # ... other keys ...
+# ... other templates ...
 ```
 
 So, knowing the above, both:
@@ -534,19 +533,19 @@ Individual templates can carry some special keys, too:
 
 ```yaml
 pin_templates:
-  - template_name:
-      # ...other keys...
+- template_name:
+    # ...other keys...
 
-      # The default tags to be used when running `pinpress pins`
-      default_tags: ['tag1', 'tag2']
+    # The default tags to be used when running `pinpress pins`
+    default_tags: ['tag1', 'tag2']
 
-      # The tags to that are removed from the results when running `pinpress tags`
-      ignored_tags: ['bad-tag', 'bad-tag2']
+    # The tags to that are removed from the results when running `pinpress tags`
+    ignored_tags: ['bad-tag', 'bad-tag2']
 
-      # The default number of results to return
-      default_num_results: 5
+    # The default number of results to return
+    default_num_results: 5
 
-      # ...other keys...
+    # ...other keys...
 ```
 
 Do note:

@@ -130,14 +130,16 @@ module PinPress
 
       # Add a single default pin and tag template
       default_pin_template = {
-        name: 'pinpress_default',
-        opener: '<ul>',
-        item: '<li><%= href %></li>',
-        closer: '</ul>'
+        pinpress_default: {
+          opener: '<ul>',
+          item: '<li><%= href %></li>',
+          closer: '</ul>'
+        }
       }
       default_tag_template = {
-        name: 'pinpress_default',
-        item: '<%= tag %> (<%= count %>),'
+        pinpress_default: {
+          item: '<%= tag %> (<%= count %>),'
+        }
       }
       configuration.pin_templates = [default_pin_template]
       configuration.tag_templates = [default_tag_template]
