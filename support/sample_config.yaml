@@ -6,11 +6,11 @@ pinpress:
   log_level: WARN
   api_token: bachya:12345
 pin_templates:
-- name: pinpress_default
-  opener: "<ul>"
-  item: <li><%= href %></li>
-  closer: "</ul>"
+- pinpress_default:
+    opener: "<ul>"
+    item: <li><%= href %></li>
+    closer: "</ul>"
 tag_templates:
-- name: pinpress_default
-  item: "<%= tag %> (<%= count %>),"
+- pinpress_default:
+    item: "<%= tag %> (<%= count %>),"
 links: {}
